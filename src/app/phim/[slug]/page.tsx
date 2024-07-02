@@ -21,16 +21,18 @@ export default async function Details({ params }: Props) {
       <Information item={item} hasLinks={true} />
       <div className="space-y-4 p-4">
         <div className="">{item.content}</div>
-        <div className="">
-          <iframe
-            width="560"
-            height="315"
-            src={item.trailer_url.replace("/watch?v=", "/embed/")}
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen={true}
-            className="mx-auto"
-          ></iframe>
-        </div>
+        {item.trailer_url && (
+          <div className="">
+            <iframe
+              width="560"
+              height="315"
+              src={item.trailer_url.replace("/watch?v=", "/embed/")}
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen={true}
+              className="mx-auto"
+            ></iframe>
+          </div>
+        )}
       </div>
     </>
   );

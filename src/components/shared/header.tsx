@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Input } from "../ui/input";
 import { Search } from "lucide-react";
+import FormSearch from "./form-search";
 
 const categories = [
   {
@@ -43,15 +44,8 @@ export default function Header() {
             </Link>
           ))}
         </div>
-        <div className="search flex-1 flex h-full">
-          <div className="self-center flex-1 bg-white rounded-md flex items-center pr-3 border-input border">
-            <Input
-              className="text-muted-foreground border-none"
-              placeholder="Tìm kiếm phim tại đây..."
-            />
-            <Search className="h-4 w-4 text-muted-foreground" />
-          </div>
-        </div>
+
+        <FormSearch keyword="" />
       </div>
     </header>
   );
