@@ -1,12 +1,21 @@
 import Information from "@/components/shared/information";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Button, buttonVariants } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
+import { Metadata } from "next";
 
 type Props = {
   params: {
     slug: string;
+  };
+};
+
+export const generateMetadata = async ({
+  params,
+}: Props): Promise<Metadata> => {
+  const response = await fetch(`https://phimapi.com/phim/${params.slug}`);
+  const jsonData = await response.json();
+
+  return {
+    title: `FILMFREE | ${jsonData.movie.name}`,
+    description: jsonData.movie.content,
   };
 };
 

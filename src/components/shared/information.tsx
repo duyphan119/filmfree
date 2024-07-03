@@ -1,7 +1,8 @@
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import Image from "next/image";
-import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
+
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Button, buttonVariants } from "@/components/ui/button";
+import FallbackImage from "./fallback-image";
 
 export default function Information({
   item,
@@ -14,11 +15,13 @@ export default function Information({
     <div className="grid grid-cols-12 gap-4 p-4">
       <div className="col-span-12 lg:col-span-4 relative">
         <AspectRatio ratio={3 / 4}>
-          <Image
+          <FallbackImage
             src={item.poster_url}
             alt={item.slug}
             fill
             className="object-contain"
+            sizes="(max-width: 1000px) 50vw, 100vw"
+            fallbackSrc={item.thumb_url}
           />
         </AspectRatio>
       </div>

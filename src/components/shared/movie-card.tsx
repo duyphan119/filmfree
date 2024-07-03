@@ -21,7 +21,7 @@ export default function MovieCard({
     <Link
       href={`/phim/${item.slug}`}
       key={item._id}
-      className={cn("relative space-y-2", className)}
+      className={cn("relative", className)}
     >
       <AspectRatio ratio={16 / 9}>
         <FallbackImage
@@ -34,7 +34,7 @@ export default function MovieCard({
           fallbackSrc={`https://kkphim.com/${item.poster_url}`}
         />
       </AspectRatio>
-      <h5 className="text-white">{item.name}</h5>
+      <h5 className="text-white mt-2">{item.name}</h5>
       {showLanguage && (
         <span className="absolute top-0 left-0 bg-rose-500 text-white p-1 text-xs rounded-ss-md rounded-ee-md opacity-90">
           {item.lang}
