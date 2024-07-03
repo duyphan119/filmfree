@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+import { Poppins } from "next/font/google";
+
 import Header from "@/components/shared/header";
 import QueryWrapper from "@/components/shared/query-wrapper";
+import ScrollToTop from "@/components/shared/scroll-to-top";
+import Footer from "@/components/shared/footer";
+import "./globals.css";
+import { cn } from "@/lib/utils";
 
-const inter = Inter({ subsets: ["latin"] });
+const font = Poppins({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,14 +25,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={font.className}>
         <QueryWrapper>
           <Header />
+          <ScrollToTop />
           <div className="bg-slate-800">
             <div className="max-w-5xl mx-auto px-10 py-3">
-              <div className="bg-black rounded-md text-muted">{children}</div>
+              <div className="bg-black rounded-md text-muted min-h-[calc(100vh-11.5rem)]">
+                {children}
+              </div>
             </div>
           </div>
+          <Footer />
         </QueryWrapper>
       </body>
     </html>

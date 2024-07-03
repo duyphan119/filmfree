@@ -6,11 +6,11 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 
-import { AspectRatio } from "../ui/aspect-ratio";
-import { buttonVariants } from "../ui/button";
-import { Input } from "../ui/input";
-import { ScrollArea } from "../ui/scroll-area";
-import { Separator } from "../ui/separator";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import useClickOutside from "@/hooks/useClickOutside";
 
 export default function FormSearch({
@@ -50,6 +50,7 @@ export default function FormSearch({
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setVisible(false);
     router.push(pathnameViewAll);
   };
 

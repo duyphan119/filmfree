@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, SkipBack, SkipForward } from "lucide-react";
-import { Button, buttonVariants } from "../ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 

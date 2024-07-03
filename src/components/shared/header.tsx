@@ -1,30 +1,36 @@
 "use client";
 
 import Link from "next/link";
-import { Input } from "../ui/input";
-import { Search } from "lucide-react";
-import FormSearch from "./form-search";
+import { usePathname } from "next/navigation";
 
-const categories = [
+import FormSearch from "./form-search";
+import { cn } from "@/lib/utils";
+
+export const categories = [
   {
     name: "Phim bộ",
     href: "/danh-sach-phim/phim-bo",
+    slug: "phim-bo",
   },
   {
     name: "Phim lẻ",
     href: "/danh-sach-phim/phim-le",
+    slug: "phim-le",
   },
   {
     name: "Hoạt hình",
     href: "/danh-sach-phim/hoat-hinh",
+    slug: "hoat-hinh",
   },
   {
     name: "TV Shows",
     href: "/danh-sach-phim/tv-shows",
+    slug: "tv-shows",
   },
 ];
 
 export default function Header() {
+  const pathname = usePathname();
   return (
     <header className="bg-black">
       <div className="max-w-5xl mx-auto px-10 h-16 flex gap-8 text-muted">
@@ -38,7 +44,10 @@ export default function Header() {
             <Link
               key={category.href}
               href={category.href}
-              className="h-full flex items-center"
+              className={cn(
+                "h-full flex items-center hover:text-blue-400",
+                pathname.includes(category.href) && "text-blue-400"
+              )}
             >
               {category.name}
             </Link>
