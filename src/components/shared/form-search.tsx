@@ -3,7 +3,7 @@
 import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -30,23 +30,7 @@ export default function FormSearch({
 
   const router = useRouter();
 
-  const pathname = usePathname();
-
   const pathnameViewAll = `/tim-kiem?keyword=${keyword}`;
-
-  const handleSearch = async () => {
-    if (keyword) {
-      const response = await fetch(
-        `https://phimapi.com/v1/api/tim-kiem?keyword=${keyword}&limit=10`
-      );
-
-      const jsonData = await response.json();
-
-      const items = jsonData.data.items;
-
-      setResults(items);
-    }
-  };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -55,18 +39,24 @@ export default function FormSearch({
   };
 
   useEffect(() => {
-    let timeoutId = setTimeout(() => {
-      handleSearch();
+    let timeoutId = setTimeout(async () => {
+      if (keyword) {
+        const response = await fetch(
+          `https://phimapi.com/v1/api/tim-kiem?keyword=${keyword}&limit=10`
+        );
+
+        const jsonData = await response.json();
+
+        const items = jsonData.data.items;
+
+        setResults(items);
+      }
     }, 456);
 
     return () => {
       clearTimeout(timeoutId);
     };
   }, [keyword]);
-
-  useEffect(() => {
-    if (visible) setVisible(false);
-  }, [pathname]);
 
   return (
     <div ref={divRef} className="search flex-1 flex h-full relative">

@@ -61,7 +61,7 @@ export default function SearchResultsPage({ keyword }: { keyword: string }) {
   return (
     <>
       <div className={cn("p-3", isLoading && "text-transparent")}>
-        Kết quả tìm kiếm với từ khóa "{keyword}":{" "}
+        Kết quả tìm kiếm với từ khóa &quot;{keyword}&quot;:&nbsp;
         {data?.pages?.[0]?.data?.params?.pagination?.totalItems || 0} kết quả
       </div>
       <div className="grid grid-cols-12 gap-4 p-4">
