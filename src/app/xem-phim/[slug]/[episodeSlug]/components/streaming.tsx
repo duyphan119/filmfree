@@ -33,8 +33,6 @@ export default function Streaming({
     })()
   );
 
-  console.log(current);
-
   return (
     <div className="space-y-4 p-4">
       <div className="">
@@ -63,12 +61,8 @@ export default function Streaming({
                       key={name}
                       href={`/xem-phim/${movie.slug}/${slug}`}
                       className={buttonVariants({
-                        variant: "blue",
-                        className: cn(
-                          "col-span-2 md:col-span-1",
-                          isActive &&
-                            "bg-blue-200 hover:bg-blue-600/90 ring-4 ring-blue-900 text-blue-900"
-                        ),
+                        variant: isActive ? "default" : "blue",
+                        className: cn("col-span-3 sm:col-span-2 md:col-span-1"),
                       })}
                     >
                       {name}

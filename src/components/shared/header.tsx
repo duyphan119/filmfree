@@ -33,7 +33,7 @@ export default function Header() {
   const pathname = usePathname();
   return (
     <header className="bg-black">
-      <div className="max-w-5xl mx-auto lg:px-10 md:px-8 sm:px-6 px-4 md:h-16 h-32 flex flex-wrap gap-0 gap-x-4 md:gap-8 text-muted">
+      <div className="max-w-5xl mx-auto lg:px-10 md:px-8 sm:px-6 px-4 md:h-16 h-32 flex flex-wrap gap-x-4 md:gap-y-8 md:gap-x-8 text-muted">
         <div className="logo h-16 md:h-full order-1">
           <Link href="/" className="h-16 md:h-full flex items-center text-xl">
             FILMFREE
