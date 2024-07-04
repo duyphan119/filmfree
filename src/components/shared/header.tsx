@@ -33,13 +33,13 @@ export default function Header() {
   const pathname = usePathname();
   return (
     <header className="bg-black">
-      <div className="max-w-5xl mx-auto px-10 h-16 flex gap-8 text-muted">
-        <div className="logo h-full">
-          <Link href="/" className="h-full flex items-center text-xl">
+      <div className="max-w-5xl mx-auto lg:px-10 md:px-8 sm:px-6 px-4 md:h-16 h-32 flex flex-wrap gap-0 gap-x-4 md:gap-8 text-muted">
+        <div className="logo h-16 md:h-full order-1">
+          <Link href="/" className="h-16 md:h-full flex items-center text-xl">
             FILMFREE
           </Link>
         </div>
-        <div className="categories h-full flex gap-4">
+        <div className="categories h-16 md:h-full flex md:justify-start justify-center gap-4 md:order-2 order-3 w-full md:w-auto">
           {categories.map((category) => (
             <Link
               key={category.href}

@@ -26,17 +26,17 @@ export default function Footer() {
   return (
     <div className="bg-slate-900 text-muted">
       <div className="max-w-5xl mx-auto px-10">
-        <div className="flex justify-between items-center h-24">
+        <div className="flex justify-between items-center flex-1 gap-8 h-24">
           <div>
             <h1 className="text-2xl font-bold">FILMFREE</h1>
             <p className="mt-2">© 2024 FILMFREE. All rights reserved.</p>
           </div>
-          <div className="flex space-x-4">
+          <div className="grid grid-cols-4 flex-1">
             {categories.map((category) => (
               <Link
                 key={category.href}
                 href={category.href}
-                className="h-full flex items-center hover:underline hover:underline-offset-2"
+                className="col-span-2 md:col-span-1 text-center hover:underline hover:underline-offset-2"
               >
                 {category.name}
               </Link>

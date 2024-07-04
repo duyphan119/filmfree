@@ -29,7 +29,7 @@ export default function RootLayout({
           <Header />
           <ScrollToTop />
           <div className="bg-slate-800">
-            <div className="max-w-5xl mx-auto px-10 py-3">
+            <div className="max-w-5xl mx-auto lg:px-10 md:px-8 sm:px-6 px-4 py-3">
               <div className="bg-black rounded-md text-muted min-h-[calc(100vh-11.5rem)]">
                 {children}
               </div>

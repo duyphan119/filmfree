@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Swiper from "swiper";
-import { Navigation } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
 import Image from "next/image";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -27,13 +27,27 @@ export default function MovieSlider() {
 
   useEffect(() => {
     new Swiper(".swiper", {
-      modules: [Navigation],
+      modules: [Navigation, Autoplay],
       navigation: {
         nextEl: ".swiper-button-next",
         prevEl: ".swiper-button-prev",
       },
       spaceBetween: 12,
-      slidesPerView: 5,
+      slidesPerView: 1,
+      breakpoints: {
+        640: {
+          slidesPerView: 2,
+        },
+        1024: {
+          slidesPerView: 3,
+        },
+        1280: {
+          slidesPerView: 4,
+        },
+      },
+      autoplay: {
+        delay: 4567,
+      },
     });
   }, []);
 

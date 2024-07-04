@@ -13,7 +13,7 @@ export default function Information({
 }) {
   return (
     <div className="grid grid-cols-12 gap-4 p-4">
-      <div className="col-span-12 lg:col-span-4 relative">
+      <div className="col-span-12 sm:col-span-6 lg:col-span-4 relative">
         <AspectRatio ratio={3 / 4}>
           <FallbackImage
             src={item.poster_url}
@@ -25,7 +25,7 @@ export default function Information({
           />
         </AspectRatio>
       </div>
-      <div className="col-span-12 lg:col-span-8">
+      <div className="col-span-12 sm:col-span-6 lg:col-span-8">
         <h1 className="text-3xl">{item.name}</h1>
         <h3 className="text-xl text-slate-400">{item.origin_name}</h3>
         <p className="mt-2">

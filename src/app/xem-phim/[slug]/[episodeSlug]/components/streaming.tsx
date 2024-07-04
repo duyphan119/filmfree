@@ -65,9 +65,9 @@ export default function Streaming({
                       className={buttonVariants({
                         variant: "blue",
                         className: cn(
-                          "col-span-1",
+                          "col-span-2 md:col-span-1",
                           isActive &&
-                            "bg-blue-500 hover:bg-blue-600/90 ring-4 ring-blue-800"
+                            "bg-blue-200 hover:bg-blue-600/90 ring-4 ring-blue-900 text-blue-900"
                         ),
                       })}
                     >

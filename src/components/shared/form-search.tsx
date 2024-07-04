@@ -50,6 +50,7 @@ export default function FormSearch({
         const items = jsonData.data.items;
 
         setResults(items);
+        setVisible(true);
       }
     }, 456);
 
@@ -59,7 +60,10 @@ export default function FormSearch({
   }, [keyword]);
 
   return (
-    <div ref={divRef} className="search flex-1 flex h-full relative">
+    <div
+      ref={divRef}
+      className="search flex-1 flex h-16 md:h-full relative md:order-3 order-2"
+    >
       <form
         onSubmit={handleSubmit}
         className="relative self-center flex-1 bg-white rounded-md flex items-center pr-3 border-input border"
@@ -68,7 +72,6 @@ export default function FormSearch({
           type="search"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          onFocus={() => setVisible(true)}
           placeholder="Tìm kiếm phim tại đây..."
           className="w-full text-muted-foreground border-none"
         />

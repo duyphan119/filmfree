@@ -56,7 +56,6 @@ export default function SearchResultsPage({ keyword }: { keyword: string }) {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
-  console.log(data);
 
   return (
     <>
@@ -68,13 +67,22 @@ export default function SearchResultsPage({ keyword }: { keyword: string }) {
         {data?.pages?.[data?.pages?.length - 1 || 0]?.data?.items.map(
           (item: Movie) => {
             return (
-              <MovieCard key={item._id} item={item} className="col-span-3" />
+              <MovieCard
+                key={item._id}
+                item={item}
+                className="col-span-12 sm:col-span-6 lg:col-span-3"
+              />
             );
           }
         )}
         {isFetchingNextPage &&
           new Array(20).fill("").map((_, index) => {
-            return <MovieSkeletonCard key={index} className="col-span-3" />;
+            return (
+              <MovieSkeletonCard
+                key={index}
+                className="col-span-12 sm:col-span-6 lg:col-span-3"
+              />
+            );
           })}
       </div>
     </>

@@ -59,7 +59,12 @@ function Items({ apiUrl, queryKey }: { apiUrl: string; queryKey: string }) {
     <div className="grid grid-cols-12 gap-4 p-4">
       {isLoading
         ? new Array(8).fill("").map((_, index) => {
-            return <MovieSkeletonCard key={index} className="col-span-3" />;
+            return (
+              <MovieSkeletonCard
+                key={index}
+                className="col-span-12 sm:col-span-6 lg:col-span-3"
+              />
+            );
           })
         : data?.data?.items.map((item: any) => {
             return (
@@ -68,7 +73,7 @@ function Items({ apiUrl, queryKey }: { apiUrl: string; queryKey: string }) {
                 item={item}
                 showCurrentEpisode={true}
                 showLanguage={true}
-                className="col-span-3"
+                className="col-span-12 sm:col-span-6 lg:col-span-3"
               />
             );
           })}
