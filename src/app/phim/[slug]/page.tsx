@@ -23,19 +23,17 @@ export default async function Details({ params }: Props) {
   const response = await fetch(`https://phimapi.com/phim/${params.slug}`);
   const jsonData = await response.json();
 
-  const item = jsonData.movie;
-
   return (
     <>
-      <Information item={item} hasLinks={true} />
+      <Information item={jsonData} hasLinks={true} />
       <div className="space-y-4 p-4">
-        <div className="">{item.content}</div>
-        {item.trailer_url && (
+        <div className="">{jsonData.movie.content}</div>
+        {jsonData.movie.trailer_url && (
           <div className="">
             <iframe
               width="560"
               height="315"
-              src={item.trailer_url.replace("/watch?v=", "/embed/")}
+              src={jsonData.movie.trailer_url.replace("/watch?v=", "/embed/")}
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen={true}
               className="mx-auto"

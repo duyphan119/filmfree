@@ -35,6 +35,7 @@ export default function FormSearch({
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setVisible(false);
+    setKeyword("");
     router.push(pathnameViewAll);
   };
 
@@ -50,7 +51,6 @@ export default function FormSearch({
         const items = jsonData.data.items;
 
         setResults(items);
-        setVisible(true);
       }
     }, 456);
 
@@ -71,7 +71,10 @@ export default function FormSearch({
         <Input
           type="search"
           value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
+          onChange={(e) => {
+            setKeyword(e.target.value);
+          }}
+          onFocus={() => setVisible(true)}
           placeholder="Tìm kiếm phim tại đây..."
           className="w-full text-muted-foreground border-none"
         />
