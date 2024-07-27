@@ -5,29 +5,7 @@ import { usePathname } from "next/navigation";
 
 import FormSearch from "./form-search";
 import { cn } from "@/lib/utils";
-
-export const categories = [
-  {
-    name: "Phim bộ",
-    href: "/danh-sach-phim/phim-bo",
-    slug: "phim-bo",
-  },
-  {
-    name: "Phim lẻ",
-    href: "/danh-sach-phim/phim-le",
-    slug: "phim-le",
-  },
-  {
-    name: "Hoạt hình",
-    href: "/danh-sach-phim/hoat-hinh",
-    slug: "hoat-hinh",
-  },
-  {
-    name: "TV Shows",
-    href: "/danh-sach-phim/tv-shows",
-    slug: "tv-shows",
-  },
-];
+import { filmTypesList } from "@/lib/constants";
 
 export default function Header() {
   const pathname = usePathname();
@@ -40,7 +18,7 @@ export default function Header() {
           </Link>
         </div>
         <div className="categories h-16 md:h-full flex md:justify-start justify-center gap-4 md:order-2 order-3 w-full md:w-auto">
-          {categories.map((category) => (
+          {filmTypesList.map((category) => (
             <Link
               key={category.href}
               href={category.href}

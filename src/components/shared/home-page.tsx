@@ -1,29 +1,45 @@
 "use client";
 
 import MovieSlider from "@/components/shared/movie-slider";
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
-import MovieCard from "./movie-card";
-import MovieSkeletonCard from "./movie-skeleton-card";
-import { categories } from "./header";
+import { filmTypesList as _filmTypeList } from "@/lib/constants";
+import { Movie } from "@prisma/client";
 import { Fragment } from "react";
+import MovieCard from "./movie-card";
 
-export default function HomePage() {
+type HomePageProps = {
+  latestMovies: Movie[];
+  filmTypeList: typeof _filmTypeList;
+};
+
+export default function HomePage({
+  latestMovies,
+  filmTypeList,
+}: HomePageProps) {
   return (
     <>
       <Heading href="/danh-sach-phim">Phim mới cập nhật</Heading>
-      <MovieSlider />
-      {categories.map((category) => {
+      <MovieSlider movies={latestMovies} />
+      {filmTypeList.map((filmType) => {
         return (
-          <Fragment key={category.href}>
-            <Heading href={`/danh-sach-phim/${category.slug}`}>
-              {category.name}
+          <Fragment key={filmType.href}>
+            <Heading href={`/danh-sach-phim/${filmType.slug}`}>
+              {filmType.name}
             </Heading>
-            <Items
-              apiUrl={`https://phimapi.com/v1/api/danh-sach/${category.slug}?limit=8`}
-              queryKey={category.slug}
-            />
+            <div className="grid grid-cols-12 gap-4 p-4">
+              {filmType.movies.map((item) => {
+                return (
+                  <MovieCard
+                    key={item.id}
+                    item={item}
+                    showCurrentEpisode={true}
+                    showLanguage={true}
+                    className="col-span-12 sm:col-span-6 lg:col-span-3"
+                  />
+                );
+              })}
+            </div>
           </Fragment>
         );
       })}
@@ -41,42 +57,6 @@ function Heading({
   return (
     <div className="uppercase p-3 text-muted">
       <Link href={href}>{children}</Link>
-    </div>
-  );
-}
-
-function Items({ apiUrl, queryKey }: { apiUrl: string; queryKey: string }) {
-  const { data, isLoading } = useQuery({
-    queryKey: [queryKey],
-    queryFn: async () => {
-      const response = await fetch(apiUrl);
-      return await response.json();
-    },
-    staleTime: 1000 * 60 * 5000, // 5000 minutes
-  });
-
-  return (
-    <div className="grid grid-cols-12 gap-4 p-4">
-      {isLoading
-        ? new Array(8).fill("").map((_, index) => {
-            return (
-              <MovieSkeletonCard
-                key={index}
-                className="col-span-12 sm:col-span-6 lg:col-span-3"
-              />
-            );
-          })
-        : data?.data?.items.map((item: any) => {
-            return (
-              <MovieCard
-                key={item._id}
-                item={item}
-                showCurrentEpisode={true}
-                showLanguage={true}
-                className="col-span-12 sm:col-span-6 lg:col-span-3"
-              />
-            );
-          })}
     </div>
   );
 }

@@ -3,31 +3,47 @@
 import VideoPlayer from "@/components/shared/video-player";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {
+  Actor,
+  Category,
+  Country,
+  Director,
+  Episode,
+  Movie,
+  MovieActor,
+  MovieCategory,
+  MovieCountry,
+  MovieDirector,
+  Server,
+} from "@prisma/client";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 export default function Streaming({
-  episodes,
+  servers,
   movie,
   episodeSlug,
 }: {
-  episodes: any;
-  movie: any;
+  movie: Movie & {
+    movieActors: Array<MovieActor & { actor: Actor | null }>;
+    movieDirectors: Array<MovieDirector & { director: Director | null }>;
+    movieCountries: Array<MovieCountry & { country: Country | null }>;
+    movieCategories: Array<MovieCategory & { category: Category | null }>;
+  };
+
+  servers: Array<Server & { episodes: Episode[] }>;
   episodeSlug: any;
 }) {
   const [current, setCurrent] = useState<any>(
     (() => {
       let serverName = localStorage.getItem("currentServerName") || "";
-      const episode = episodes.find(
-        (episode: any) => episode.server_name === serverName
-      );
-      serverName = episode?.server_name || episodes[0].server_name;
-      const serverData = episode?.server_data || episodes[0].server_data;
-      const data = serverData.find((item: any) => item.slug === episodeSlug);
-      const currentEpisode = data || serverData[0];
+      const server =
+        servers.find((item) => item.name === serverName) || servers[0] || null;
+
+      const data = server?.episodes.find((item) => item.slug === episodeSlug);
+      const currentEpisode = data || server?.episodes[0] || null;
       return {
-        serverName,
-        serverData,
+        server,
         currentEpisode,
       };
     })()
@@ -38,16 +54,16 @@ export default function Streaming({
       <div className="">
         <VideoPlayer
           url={current.currentEpisode.link_m3u8}
-          thumbnail={movie.thumb_url}
+          thumbnail={movie.thumbnailUrl}
         />
       </div>
       <div className="">
-        {episodes.map((episode: any) => {
+        {servers.map((server) => {
           return (
-            <div key={episode.server_name}>
-              <div className="">Server {episode.server_name}</div>
+            <div key={server.id}>
+              <div className="">Server {server.name}</div>
               <div className="grid grid-cols-12 gap-3 mt-2">
-                {episode.server_data.map(({ name, slug }: any) => {
+                {server.episodes.map(({ name, slug }: any) => {
                   // if (slug === current.currentEpisode.slug) {
                   //   return (
                   //     <Button variant="blue" disabled={true}>
@@ -55,6 +71,7 @@ export default function Streaming({
                   //     </Button>
                   //   );
                   // }
+
                   const isActive = slug === current.currentEpisode.slug;
                   return (
                     <Link

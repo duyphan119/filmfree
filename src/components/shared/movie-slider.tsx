@@ -12,19 +12,13 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Movie } from "@prisma/client";
 
-export default function MovieSlider() {
-  const { data, isLoading } = useQuery({
-    queryKey: ["phim-moi-cap-nhat"],
-    queryFn: async () => {
-      const response = await fetch(
-        "https://phimapi.com/danh-sach/phim-moi-cap-nhat"
-      );
-      return await response.json();
-    },
-    staleTime: 1000 * 60 * 5000, // 5000 minutes
-  });
+type MovieSliderProps = {
+  movies: Movie[];
+};
 
+export default function MovieSlider({ movies }: MovieSliderProps) {
   useEffect(() => {
     new Swiper(".swiper", {
       modules: [Navigation, Autoplay],
@@ -54,38 +48,27 @@ export default function MovieSlider() {
   return (
     <div className="swiper text-muted group !m-3">
       <div className="swiper-wrapper">
-        {isLoading
-          ? new Array(5).fill("").map((_, index) => {
-              return (
-                <div key={index} className="swiper-slide relative">
-                  <AspectRatio ratio={16 / 9}>
-                    <Skeleton className="h-full w-full" />
-                  </AspectRatio>
-                  <Skeleton className="h-6 mt-2" />
-                </div>
-              );
-            })
-          : data?.items.map((item: any) => {
-              return (
-                <Link
-                  href={`/phim/${item.slug}`}
-                  key={item._id}
-                  className="swiper-slide relative"
-                >
-                  <AspectRatio ratio={16 / 9}>
-                    <Image
-                      src={item.thumb_url}
-                      alt={item.slug}
-                      fill
-                      className="rounded-md"
-                      sizes="(max-width:1000px) 50vw, 100vw"
-                      priority={true}
-                    />
-                  </AspectRatio>
-                  <h5 className="text-white mt-2">{item.name}</h5>
-                </Link>
-              );
-            })}
+        {movies.map((item) => {
+          return (
+            <Link
+              href={`/phim/${item.slug}`}
+              key={item.id}
+              className="swiper-slide relative"
+            >
+              <AspectRatio ratio={16 / 9}>
+                <Image
+                  src={item.thumbnailUrl}
+                  alt={item.slug}
+                  fill
+                  className="rounded-md"
+                  sizes="(max-width:1000px) 50vw, 100vw"
+                  priority={true}
+                />
+              </AspectRatio>
+              <h5 className="text-white mt-2">{item.name}</h5>
+            </Link>
+          );
+        })}
       </div>
       <div className="swiper-pagination"></div>
 

@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Country {
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  name           String         @unique
+  slug           String         @unique
+  movieCountries MovieCountry[]
+}
+
+model Category {
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  name            String          @unique
+  slug            String          @unique
+  movieCategories MovieCategory[]
+}
+
+model Movie {
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  name            String          @unique
+  slug            String          @unique
+  description     String
+  trailerUrl      String?
+  originName      String
+  language        String
+  thumbnailUrl    String
+  posterUrl       String
+  year            Int
+  quality         String
+  episodeCurrent  String
+  type            String
+  time            String
+  episodeTotal    Int
+  view            Int             @default(0)
+  movieServers    MovieServer[]
+  movieCategories MovieCategory[]
+  movieCountries  MovieCountry[]
+  movieDirectors  MovieDirector[]
+  movieActors     MovieActor[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model Server {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  name         String        @unique
+  movieServers MovieServer[]
+  episodes     Episode[]
+}
+
+model Episode {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  slug      String
+  linkM3u8  String
+  linkEmbed String
+  filename  String
+  server    Server? @relation(fields: [serverId], references: [id])
+  serverId  String? @db.ObjectId
+  movieId   String
+}
+
+model Director {
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  name           String          @unique
+  movieDirectors MovieDirector[]
+}
+
+model Actor {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String       @unique
+  movieActors MovieActor[]
+}
+
+model MovieCountry {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  country   Country? @relation(fields: [countryId], references: [id])
+  countryId String?  @db.ObjectId
+  movie     Movie?   @relation(fields: [movieId], references: [id])
+  movieId   String?  @db.ObjectId
+}
+
+model MovieCategory {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?   @db.ObjectId
+  movie      Movie?    @relation(fields: [movieId], references: [id])
+  movieId    String?   @db.ObjectId
+}
+
+model MovieServer {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  server   Server? @relation(fields: [serverId], references: [id])
+  serverId String? @db.ObjectId
+  movie    Movie?  @relation(fields: [movieId], references: [id])
+  movieId  String? @db.ObjectId
+}
+
+model MovieDirector {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  director   Director? @relation(fields: [directorId], references: [id])
+  directorId String?   @db.ObjectId
+  movie      Movie?    @relation(fields: [movieId], references: [id])
+  movieId    String?   @db.ObjectId
+}
+
+model MovieActor {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  actor   Actor?  @relation(fields: [actorId], references: [id])
+  actorId String? @db.ObjectId
+  movie   Movie?  @relation(fields: [movieId], references: [id])
+  movieId String? @db.ObjectId
+}
