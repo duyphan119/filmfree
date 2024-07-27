@@ -1,5 +1,6 @@
 "use client";
 
+import { Movie } from "@prisma/client";
 import MovieCard from "./movie-card";
 import Pagination from "./pagination";
 
@@ -9,7 +10,7 @@ export default function ListPage({
   totalPages,
   slug,
 }: {
-  items: any[];
+  items: Movie[];
   currentPage: number;
   totalPages: number;
   slug?: string;
@@ -17,10 +18,10 @@ export default function ListPage({
   return (
     <>
       <div className="grid grid-cols-12 gap-4 p-4">
-        {items.map((item: Movie) => {
+        {items.map((item) => {
           return (
             <MovieCard
-              key={item._id}
+              key={item.id}
               item={item}
               showCurrentEpisode={true}
               showLanguage={true}

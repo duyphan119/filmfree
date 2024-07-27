@@ -1,4 +1,6 @@
 import ListPage from "@/components/shared/list-page";
+import prisma from "@/lib/client";
+import { MessageSquareWarning } from "lucide-react";
 import { Metadata } from "next";
 
 type Props = {
@@ -24,25 +26,42 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Movies({ params, searchParams }: Props) {
-  let limit = searchParams.limit || 16;
-  let page = searchParams.page || 1;
-  const response = await fetch(
-    `https://phimapi.com/v1/api/danh-sach/${params.slug}?limit=${limit}&page=${page}`
-  );
-  const jsonData = await response.json();
+  try {
+    let limit = Number(searchParams.limit || 16);
+    let page = Number(searchParams.page || 1);
 
-  const items = jsonData.data.items;
+    const movies = await prisma.movie.findMany({
+      where: {
+        type: params.slug,
+      },
+      take: limit,
+      skip: (page - 1) * limit,
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+    const count = await prisma.movie.count({
+      where: {
+        type: params.slug,
+      },
+    });
 
-  const { currentPage, totalPages } = jsonData.data.params.pagination;
-
-  return (
-    <>
-      <ListPage
-        currentPage={currentPage}
-        totalPages={totalPages}
-        items={items}
-        slug={params.slug}
-      />
-    </>
-  );
+    return (
+      <>
+        <ListPage
+          currentPage={page}
+          totalPages={Math.ceil(count / limit)}
+          items={movies}
+          slug={params.slug}
+        />
+      </>
+    );
+  } catch (error) {
+    return (
+      <div className="bg-destructive text-destructive-foreground p-4 flex gap-1">
+        <MessageSquareWarning />
+        <span>Có lỗi xảy ra, vui lòng thử lại sau!</span>
+      </div>
+    );
+  }
 }

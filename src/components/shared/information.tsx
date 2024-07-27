@@ -129,7 +129,7 @@ export default function Information({
           })}
         </p>
         <p className="mt-2">
-          Thời lượng: <span className="text-slate-200">''</span>
+          Thời lượng: <span className="text-slate-200">{item.time}</span>
         </p>
         <p className="mt-2">
           Số tập: <span className="text-slate-200">{item.episodeTotal}</span>
