@@ -3,42 +3,49 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
-  const typeName = searchParams.get("type") || "Phim bộ";
+  const keyword = searchParams.get("keyword") || "";
+  const limit = Number(searchParams.get("limit") || "12");
+  const page = Number(searchParams.get("page") || "1");
 
   try {
-    let movies = await prisma.movie.findMany({
-      include: {
-        movieActors: {
-          include: {
-            actor: true,
+    const where: any = {
+      OR: [
+        {
+          name: {
+            contains: keyword,
+            mode: "insensitive",
           },
         },
-        movieCategories: {
-          include: {
-            category: true,
+        {
+          originName: {
+            contains: keyword,
+            mode: "insensitive",
           },
         },
-        movieCountries: {
-          include: {
-            country: true,
-          },
-        },
-        movieDirectors: {
-          include: {
-            director: true,
-          },
-        },
+      ],
+    };
+    const movies = await prisma.movie.findMany({
+      where,
+      orderBy: {
+        updatedAt: "desc",
       },
-      take: 12,
+      take: limit,
+      skip: (page - 1) * limit,
+    });
+    const count = await prisma.movie.count({
+      where,
     });
 
     return NextResponse.json({
-      rows: movies,
+      items: movies,
+      totalPages: Math.ceil(count / limit),
+      count,
     });
   } catch (error) {
-    console.log(error);
+    return NextResponse.json({
+      items: [],
+      totalPages: 0,
+      count: 0,
+    });
   }
-  return NextResponse.json({
-    rows: [],
-  });
 };

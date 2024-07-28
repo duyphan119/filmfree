@@ -11,6 +11,7 @@ import {
 import {
   Actor,
   Category,
+  Country,
   Director,
   Movie,
   MovieActor,
@@ -22,38 +23,45 @@ import { Trash2 } from "lucide-react";
 import FallbackImage from "../shared/fallback-image";
 import { AspectRatio } from "../ui/aspect-ratio";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import { deleteMovie } from "@/lib/actions";
 
 type TableMovieProps = {
-  data: Array<
+  movies: Array<
     Movie & {
       movieActors: Array<
         MovieActor & {
-          actor: Actor;
+          actor: Actor | null;
         }
       >;
       movieCategories: Array<
         MovieCategory & {
-          category: Category;
+          category: Category | null;
         }
       >;
       movieCountries: Array<
         MovieCountry & {
-          country: Country;
+          country: Country | null;
         }
       >;
       movieDirectors: Array<
         MovieDirector & {
-          director: Director;
+          director: Director | null;
         }
       >;
     }
   >;
-  className?: string;
+  url: string;
 };
 
-const TableMovie = ({ data, className }: TableMovieProps) => {
+const TableMovie = ({ movies, url }: TableMovieProps) => {
+  const router = useRouter();
+
+  const handleClickDelete = (id: string) => {
+    router.refresh();
+  };
   return (
-    <Table className={className}>
+    <Table className="mt-4">
       <TableHeader>
         <TableRow>
           <TableHead className="text-slate-50">Ảnh bìa</TableHead>
@@ -66,9 +74,15 @@ const TableMovie = ({ data, className }: TableMovieProps) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.length > 0 ? (
-          data.map((row) => (
-            <TableRow key={row.id}>
+        {movies.length > 0 ? (
+          movies.map((row) => (
+            <TableRow
+              key={row.id}
+              onClick={() => {
+                router.push(`/phim/${row.slug}`);
+              }}
+              className="cursor-pointer transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+            >
               <TableCell className="text-slate-50 w-56">
                 <AspectRatio ratio={16 / 9}>
                   <FallbackImage
@@ -99,16 +113,29 @@ const TableMovie = ({ data, className }: TableMovieProps) => {
               <TableCell className="text-slate-50">{row.type}</TableCell>
               <TableCell className="text-slate-50">
                 {row.movieCategories
-                  .map((item) => item.category.name)
+                  .map((item) => item.category?.name || "")
                   .join(", ")}
               </TableCell>
               <TableCell className="text-slate-50">
-                {row.movieCountries.map((item) => item.country.name).join(", ")}
+                {row.movieCountries
+                  .map((item) => item.country?.name || "")
+                  .join(", ")}
               </TableCell>
               <TableCell className="text-slate-50">
-                <Button variant="destructive" size="icon">
-                  <Trash2 />
-                </Button>
+                <form
+                  action={async () => {
+                    deleteMovie(row.id, url);
+                  }}
+                >
+                  <Button
+                    type="submit"
+                    variant="destructive"
+                    size="icon"
+                    onClick={() => handleClickDelete(row.id)}
+                  >
+                    <Trash2 />
+                  </Button>
+                </form>
               </TableCell>
             </TableRow>
           ))

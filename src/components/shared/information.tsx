@@ -136,9 +136,15 @@ export default function Information({
         </p>
         {hasLinks && hasEpisode && (
           <div className="mt-2 space-x-2">
-            <Button size="lg" variant="secondary">
+            <Link
+              href={`/phim/${item.slug}/tai-ve`}
+              className={buttonVariants({
+                size: "lg",
+                variant: "secondary",
+              })}
+            >
               Tải về
-            </Button>
+            </Link>
             <Link
               href={`/xem-phim/${item.slug}`}
               className={buttonVariants({

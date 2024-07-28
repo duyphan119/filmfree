@@ -1,6 +1,5 @@
 "use client";
 
-import VideoPlayer from "@/components/shared/video-player";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -17,7 +16,7 @@ import {
   Server,
 } from "@prisma/client";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Streaming({
   servers,
@@ -34,7 +33,12 @@ export default function Streaming({
   servers: Array<Server & { episodes: Episode[] }>;
   episodeSlug: any;
 }) {
-  const [current, setCurrent] = useState<any>(
+  const [current, setCurrent] = useState<{
+    server: Server | null;
+    currentEpisode: Episode | null;
+  } | null>(null);
+
+  useEffect(() => {
     (() => {
       let serverName = localStorage.getItem("currentServerName") || "";
       const server =
@@ -42,20 +46,25 @@ export default function Streaming({
 
       const data = server?.episodes.find((item) => item.slug === episodeSlug);
       const currentEpisode = data || server?.episodes[0] || null;
-      return {
+      setCurrent({
         server,
         currentEpisode,
-      };
-    })()
-  );
+      });
+    })();
+  }, [servers, episodeSlug]);
+
+  if (!current || !current.currentEpisode || !current.server) return null;
+
+  const currentSlug = current.currentEpisode.slug;
 
   return (
     <div className="space-y-4 p-4">
       <div className="">
-        <VideoPlayer
-          url={current.currentEpisode.link_m3u8}
-          thumbnail={movie.thumbnailUrl}
-        />
+        <iframe
+          src={current.currentEpisode.linkEmbed}
+          className="w-full aspect-video"
+          allowFullScreen={true}
+        ></iframe>
       </div>
       <div className="">
         {servers.map((server) => {
@@ -64,15 +73,7 @@ export default function Streaming({
               <div className="">Server {server.name}</div>
               <div className="grid grid-cols-12 gap-3 mt-2">
                 {server.episodes.map(({ name, slug }: any) => {
-                  // if (slug === current.currentEpisode.slug) {
-                  //   return (
-                  //     <Button variant="blue" disabled={true}>
-                  //       {name}
-                  //     </Button>
-                  //   );
-                  // }
-
-                  const isActive = slug === current.currentEpisode.slug;
+                  const isActive = slug === currentSlug;
                   return (
                     <Link
                       key={name}

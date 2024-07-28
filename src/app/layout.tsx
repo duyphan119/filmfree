@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 
-import QueryWrapper from "@/components/shared/query-wrapper";
 import ScrollToTop from "@/components/shared/scroll-to-top";
 import "./globals.css";
 
@@ -23,10 +22,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={font.className}>
-        <QueryWrapper>
-          <ScrollToTop />
-          {children}
-        </QueryWrapper>
+        <ScrollToTop />
+        {children}
       </body>
     </html>
   );

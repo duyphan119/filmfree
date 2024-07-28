@@ -10,8 +10,6 @@ import "swiper/css/pagination";
 
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Movie } from "@prisma/client";
 
 type MovieSliderProps = {

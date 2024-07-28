@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import FormSearch from "./form-search";
 import { cn } from "@/lib/utils";
 import { filmTypesList } from "@/lib/constants";
+import { Suspense } from "react";
 
 export default function Header() {
   const pathname = usePathname();
@@ -32,7 +33,9 @@ export default function Header() {
           ))}
         </div>
 
-        <FormSearch keyword="" />
+        <Suspense>
+          <FormSearch />
+        </Suspense>
       </div>
     </header>
   );

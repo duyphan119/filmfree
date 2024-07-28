@@ -25,7 +25,7 @@ export default function ListPage({
               item={item}
               showCurrentEpisode={true}
               showLanguage={true}
-              className="col-span-12 sm:col-span-6 lg:col-span-3"
+              className="col-span-6 sm:col-span-4 lg:col-span-3"
             />
           );
         })}

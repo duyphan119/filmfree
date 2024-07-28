@@ -3,7 +3,7 @@
 import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -12,15 +12,17 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import useClickOutside from "@/hooks/useClickOutside";
+import { Movie } from "@prisma/client";
+import axios from "axios";
 
-export default function FormSearch({
-  keyword: defaultKeyword,
-}: {
-  keyword: string;
-}) {
+export default function FormSearch() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const searchParamsKeyword = searchParams.get("keyword");
+
   const [visible, setVisible] = useState<boolean>(false);
   const [results, setResults] = useState<Movie[]>([]);
-  const [keyword, setKeyword] = useState<string>(defaultKeyword);
+  const [keyword, setKeyword] = useState<string>("");
 
   const divRef = useRef<HTMLDivElement | null>(null);
 
@@ -34,21 +36,21 @@ export default function FormSearch({
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setVisible(false);
-    setKeyword("");
     router.push(pathnameViewAll);
   };
 
   useEffect(() => {
+    setKeyword("");
+    setVisible(false);
+    setResults([]);
+  }, [pathname, searchParamsKeyword]);
+
+  useEffect(() => {
     let timeoutId = setTimeout(async () => {
       if (keyword) {
-        const response = await fetch(
-          `https://phimapi.com/v1/api/tim-kiem?keyword=${keyword}&limit=10`
-        );
-
-        const jsonData = await response.json();
-
-        const items = jsonData.data.items;
+        const {
+          data: { items },
+        } = await axios.get("/api/movie", { params: { keyword } });
 
         setResults(items);
       }
@@ -91,15 +93,13 @@ export default function FormSearch({
                   >
                     {results.map((movie) => (
                       <Link
-                        key={movie._id}
+                        key={movie.id}
                         href={`/phim/${movie.slug}`}
                         className="p-3 hover:bg-slate-200 cursor-pointer grid grid-cols-4 gap-2"
                       >
                         <AspectRatio ratio={16 / 9} className="col-span-1">
                           <Image
-                            src={`https://kkphim.com/${
-                              movie.thumb_url || movie.poster_url
-                            }`}
+                            src={movie.thumbnailUrl || movie.posterUrl}
                             alt="thumbnail"
                             fill
                             sizes="(max-width:1000px) 50vw, 100vw"

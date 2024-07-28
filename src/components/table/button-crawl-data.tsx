@@ -14,28 +14,21 @@ const ButtonCrawlData = ({ model }: ButtonCrawlDataProps) => {
 
   const crawlMovieData = async (typeSlug: string) => {
     let currentPage = 1;
+    let count = 0;
+    const response = await fetch(
+      `https://phimapi.com/v1/api/danh-sach/${typeSlug}?limit=10&page=${currentPage}`
+    );
+    const {
+      data: { items },
+    }: any = await response.json();
 
-    while (true) {
-      const response = await fetch(
-        `https://phimapi.com/v1/api/danh-sach/${typeSlug}?limit=10&page=${currentPage}`
-      );
-      const {
-        data: { items },
-      }: any = await response.json();
-
-      if (currentPage > 64) {
-        break;
-      }
-
-      for (let i = 0; i < items.length; i++) {
-        await axios.get(`/api/crawl/movie/${items[i].slug}`, {
-          params: {
-            type: typeSlug,
-          },
-        });
-        console.log("crawl movie data success ", items[i].slug);
-      }
-      currentPage++;
+    for (let i = 0; i < items.length; i++) {
+      await axios.get(`/api/crawl/movie/${items[i].slug}`, {
+        params: {
+          type: typeSlug,
+        },
+      });
+      console.log("crawl movie data success ", ++count);
     }
   };
 

@@ -2,6 +2,8 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import prisma from "./client";
+import { revalidatePath } from "next/cache";
 
 export const login = (formData: FormData) => {
   const username = formData.get("username");
@@ -16,4 +18,11 @@ export const login = (formData: FormData) => {
     });
     return redirect("/admin");
   }
+};
+
+export const deleteMovie = async (movieId: string, url: string) => {
+  await prisma.movie.delete({
+    where: { id: movieId },
+  });
+  revalidatePath(url);
 };

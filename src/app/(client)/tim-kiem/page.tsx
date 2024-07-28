@@ -29,34 +29,35 @@ export default async function SearchResults({ searchParams }: Props) {
     if (!searchParams.keyword) {
       return redirect("/");
     }
-    let limit = Number(searchParams.limit || 16);
-    let page = Number(searchParams.page || 1);
+    let limit = 16;
+    let page = 1;
 
-    const movies = await prisma.movie.findMany({
-      where: {
-        name: {
-          contains: searchParams.keyword,
-          mode: "insensitive",
+    const where: any = {
+      OR: [
+        {
+          name: {
+            contains: searchParams.keyword,
+            mode: "insensitive",
+          },
         },
-      },
-      take: limit,
-      skip: (page - 1) * limit,
-      orderBy: {
-        updatedAt: "desc",
-      },
-    });
+        {
+          originName: {
+            contains: searchParams.keyword,
+            mode: "insensitive",
+          },
+        },
+      ],
+    };
+
     const count = await prisma.movie.count({
-      where: {
-        name: {
-          contains: searchParams.keyword,
-          mode: "insensitive",
-        },
-      },
+      where,
     });
     return (
       <SearchResultsPage
+        totalPages={Math.ceil(count / limit)}
+        limit={limit}
+        page={page}
         count={count}
-        movies={movies}
         keyword={searchParams.keyword}
       />
     );

@@ -1,9 +1,9 @@
+import ErrorMessage from "@/components/shared/error-message";
 import Information from "@/components/shared/information";
-import Streaming from "./components/streaming";
+import Streaming from "@/components/shared/streaming";
+import prisma from "@/lib/client";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import prisma from "@/lib/client";
-import { MessageSquareWarning } from "lucide-react";
 
 type Props = {
   params: {
@@ -15,12 +15,21 @@ type Props = {
 export const generateMetadata = async ({
   params,
 }: Props): Promise<Metadata> => {
-  const response = await fetch(`https://phimapi.com/phim/${params.slug}`);
-  const jsonData = await response.json();
+  const movie = await prisma.movie.findFirst({
+    where: {
+      slug: params.slug,
+    },
+  });
+
+  if (!movie) {
+    return {
+      title: "Không tìm thấy trang",
+    };
+  }
 
   return {
-    title: `FILMFREE | Xem phim ${jsonData.movie.name}`,
-    description: jsonData.movie.content,
+    title: `FILMFREE | Xem phim ${movie.name}`,
+    description: movie.description,
   };
 };
 
@@ -77,11 +86,6 @@ export default async function Watching({ params }: Props) {
       </>
     );
   } catch (error) {
-    return (
-      <div className="bg-destructive text-destructive-foreground p-4 flex gap-1">
-        <MessageSquareWarning />
-        <span>Có lỗi xảy ra, vui lòng thử lại sau!</span>
-      </div>
-    );
+    return <ErrorMessage />;
   }
 }

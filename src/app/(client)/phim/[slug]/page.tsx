@@ -1,3 +1,4 @@
+import ErrorMessage from "@/components/shared/error-message";
 import Information from "@/components/shared/information";
 import prisma from "@/lib/client";
 import { MessageSquareWarning } from "lucide-react";
@@ -91,11 +92,6 @@ export default async function Details({ params }: Props) {
       </>
     );
   } catch (error) {
-    return (
-      <div className="bg-destructive text-destructive-foreground p-4 flex gap-1">
-        <MessageSquareWarning />
-        <span>Có lỗi xảy ra, vui lòng thử lại sau!</span>
-      </div>
-    );
+    return <ErrorMessage />;
   }
 }

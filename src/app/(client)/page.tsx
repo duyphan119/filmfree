@@ -18,7 +18,7 @@ export default async function Home() {
     const filmType = _filmTypeList[i];
     filmType.movies = await prisma.movie.findMany({
       where: {
-        type: filmType.name,
+        type: filmType.slug,
       },
       take: 12,
       orderBy: { updatedAt: "desc" },
