@@ -2,18 +2,17 @@
 
 import Link from "next/link";
 import Swiper from "swiper";
-import { Navigation, Autoplay } from "swiper/modules";
-import Image from "next/image";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { Autoplay, Navigation } from "swiper/modules";
 
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useEffect } from "react";
-import { Movie } from "@prisma/client";
+import FallbackImage from "./fallback-image";
 
 type MovieSliderProps = {
-  movies: Movie[];
+  movies: any[];
 };
 
 export default function MovieSlider({ movies }: MovieSliderProps) {
@@ -50,12 +49,13 @@ export default function MovieSlider({ movies }: MovieSliderProps) {
           return (
             <Link
               href={`/phim/${item.slug}`}
-              key={item.id}
+              key={item._id}
               className="swiper-slide relative"
             >
               <AspectRatio ratio={16 / 9}>
-                <Image
-                  src={item.thumbnailUrl}
+                <FallbackImage
+                  src={item.thumb_url}
+                  fallbackSrc={item.poster_url}
                   alt={item.slug}
                   fill
                   className="rounded-md"

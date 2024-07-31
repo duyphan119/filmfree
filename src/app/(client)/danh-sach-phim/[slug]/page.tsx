@@ -1,5 +1,6 @@
 import ListPage from "@/components/shared/list-page";
-import prisma from "@/lib/client";
+
+import axios from "axios";
 import { MessageSquareWarning } from "lucide-react";
 import { Metadata } from "next";
 
@@ -29,29 +30,24 @@ export default async function Movies({ params, searchParams }: Props) {
   try {
     let limit = Number(searchParams.limit || 16);
     let page = Number(searchParams.page || 1);
+    const {
+      data: { data },
+    } = await axios.get(`https://phimapi.com/v1/api/danh-sach/${params.slug}`, {
+      params: {
+        page,
+        limit,
+      },
+    });
 
-    const movies = await prisma.movie.findMany({
-      where: {
-        type: params.slug,
-      },
-      take: limit,
-      skip: (page - 1) * limit,
-      orderBy: {
-        updatedAt: "desc",
-      },
-    });
-    const count = await prisma.movie.count({
-      where: {
-        type: params.slug,
-      },
-    });
+    const count = data.params.pagination.totalItems;
 
     return (
       <>
         <ListPage
           currentPage={page}
           totalPages={Math.ceil(count / limit)}
-          items={movies}
+          items={data.items}
+          cdnImageDomain={data.APP_DOMAIN_CDN_IMAGE}
           slug={params.slug}
         />
       </>

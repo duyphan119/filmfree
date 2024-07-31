@@ -1,12 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Movie } from "@prisma/client";
-import MovieCard from "./movie-card";
-import { useEffect, useMemo, useState } from "react";
-import { Button } from "../ui/button";
 import axios from "axios";
-import { ListCollapse, Loader2 } from "lucide-react";
+import { ListCollapse } from "lucide-react";
+import { useState } from "react";
+import { Button } from "../ui/button";
+import MovieCard from "./movie-card";
 
 type SearchResultPageProps = {
   keyword: string;
@@ -14,6 +13,8 @@ type SearchResultPageProps = {
   limit: number;
   page: number;
   count: number;
+  items: any[];
+  cdnImageDomain: string;
 };
 
 export default function SearchResultsPage({
@@ -22,40 +23,56 @@ export default function SearchResultsPage({
   limit,
   page: defaultPage,
   totalPages,
+  items,
+  cdnImageDomain,
 }: SearchResultPageProps) {
-  const [movies, setMovies] = useState<Movie[]>();
+  const [movies, setMovies] = useState<any[]>(items);
   const [page, setPage] = useState<number>(defaultPage);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleClickLoadmore = () => {
-    setPage((prevPage) => prevPage + limit);
+  const handleClickLoadmore = async () => {
+    const newPage = page + limit;
+    setIsLoading(true);
+    try {
+      const {
+        data: { data },
+      } = await axios.get("https://phimapi.com/v1/api/tim-kiem", {
+        params: {
+          keyword,
+          page: newPage,
+          limit,
+        },
+      });
+
+      setMovies([...movies, ...data.items]);
+      setPage(newPage);
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleClickCollapse = () => {
+  const handleClickCollapse = async () => {
+    setIsLoading(true);
+    try {
+      const {
+        data: { data },
+      } = await axios.get("https://phimapi.com/v1/api/tim-kiem", {
+        params: {
+          keyword,
+          page: defaultPage,
+          limit,
+        },
+      });
+
+      setMovies(data.items);
+      setPage(defaultPage);
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
     setPage(defaultPage);
   };
-
-  useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      try {
-        const {
-          data: { items },
-        } = await axios.get("/api/movie", {
-          params: {
-            keyword,
-            page,
-            limit,
-          },
-        });
-
-        setMovies((prevState) => [...(prevState || []), ...items]);
-      } catch (error) {
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [page, keyword, limit]);
 
   return (
     <>
@@ -68,9 +85,16 @@ export default function SearchResultsPage({
           {movies.map((item) => {
             return (
               <MovieCard
-                key={item.id}
-                item={item}
+                key={item._id}
+                name={item.name}
+                slug={item.slug}
+                episodeCurrent={item.episode_current}
+                language={item.lang}
+                posterUrl={`${cdnImageDomain}/${item.poster_url}`}
+                thumbnailUrl={`${cdnImageDomain}/${item.thumb_url}`}
                 className="col-span-6 sm:col-span-4 lg:col-span-3"
+                showCurrentEpisode={true}
+                showLanguage={true}
               />
             );
           })}

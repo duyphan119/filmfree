@@ -1,22 +1,8 @@
 import Link from "next/link";
 
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import FallbackImage from "./fallback-image";
-import {
-  Actor,
-  Category,
-  Country,
-  Director,
-  Episode,
-  Movie,
-  MovieActor,
-  MovieCategory,
-  MovieCountry,
-  MovieDirector,
-  MovieServer,
-  Server,
-} from "@prisma/client";
 import { Fragment } from "react";
 
 export default function Information({
@@ -24,48 +10,43 @@ export default function Information({
   hasLinks,
   servers,
 }: {
-  item: Movie & {
-    movieActors: Array<MovieActor & { actor: Actor | null }>;
-    movieDirectors: Array<MovieDirector & { director: Director | null }>;
-    movieCountries: Array<MovieCountry & { country: Country | null }>;
-    movieCategories: Array<MovieCategory & { category: Category | null }>;
-  };
+  item: any;
   hasLinks?: boolean;
-  servers: Array<Server & { episodes: Episode[] }>;
+  servers: any[];
 }) {
-  const hasEpisode = servers.length > 0 && servers[0].episodes.length > 0;
+  const hasEpisode = servers.length > 0 && servers[0].server_data.length > 0;
 
   return (
     <div className="grid grid-cols-12 gap-4 p-4">
       <div className="col-span-12 sm:col-span-6 lg:col-span-4 relative">
         <AspectRatio ratio={3 / 4}>
           <FallbackImage
-            src={item.posterUrl}
+            src={item.poster_url}
             alt={item.slug}
             fill
             className="object-contain"
             sizes="(max-width: 1000px) 50vw, 100vw"
-            fallbackSrc={item.thumbnailUrl}
+            fallbackSrc={item.thumb_url}
           />
         </AspectRatio>
       </div>
       <div className="col-span-12 sm:col-span-6 lg:col-span-8">
         <h1 className="text-3xl">{item.name}</h1>
-        <h3 className="text-xl text-slate-400">{item.originName}</h3>
+        <h3 className="text-xl text-slate-400">{item.origin_name}</h3>
         <p className="mt-2">
           Thể loại:{" "}
-          {item.movieCategories.map((movieCategory, index: number) => {
-            if (!movieCategory.category) return "";
-            const name = movieCategory.category.name;
+          {item.category.map((category: any, index: number) => {
             return (
-              <Fragment key={name}>
+              <Fragment key={category.name}>
                 {index > 0 && <span className="text-slate-200">, </span>}
                 <Link
-                  key={name}
-                  href={`/phim?category=${name.replaceAll(" ", "+")}`}
+                  href={`/phim?model=class&value=${category.name.replaceAll(
+                    " ",
+                    "+"
+                  )}`}
                   className="text-slate-200 hover:text-blue-500 hover:underline hover:underline-offset-2"
                 >
-                  {name}
+                  {category.name}
                 </Link>
               </Fragment>
             );
@@ -73,18 +54,18 @@ export default function Information({
         </p>
         <p className="mt-2">
           Quốc gia:{" "}
-          {item.movieCountries.map((movieCountry, index: number) => {
-            if (!movieCountry.country) return "";
-            const name = movieCountry.country.name;
+          {item.country.map((country: any, index: number) => {
             return (
-              <Fragment key={name}>
+              <Fragment key={country.name}>
                 {index > 0 && <span className="text-slate-200">, </span>}
                 <Link
-                  key={name}
-                  href={`/phim?country=${name.replaceAll(" ", "+")}`}
+                  href={`/phim?model=area&value=${country.name.replaceAll(
+                    " ",
+                    "+"
+                  )}`}
                   className="text-slate-200 hover:text-blue-500 hover:underline hover:underline-offset-2"
                 >
-                  {name}
+                  {country.name}
                 </Link>
               </Fragment>
             );
@@ -92,18 +73,18 @@ export default function Information({
         </p>
         <p className="mt-2">
           Đạo diễn:{" "}
-          {item.movieDirectors.map((movieDirector, index: number) => {
-            if (!movieDirector.director) return "";
-            const name = movieDirector.director.name;
+          {item.director.map((directorName: string, index: number) => {
             return (
-              <Fragment key={name}>
+              <Fragment key={directorName}>
                 {index > 0 && <span className="text-slate-200">, </span>}
                 <Link
-                  key={name}
-                  href={`/phim?country=${name.replaceAll(" ", "+")}`}
+                  href={`/phim?model=area&value=${directorName.replaceAll(
+                    " ",
+                    "+"
+                  )}`}
                   className="text-slate-200 hover:text-blue-500 hover:underline hover:underline-offset-2"
                 >
-                  {name}
+                  {directorName}
                 </Link>
               </Fragment>
             );
@@ -111,18 +92,18 @@ export default function Information({
         </p>
         <p className="mt-2">
           Diễn viên:{" "}
-          {item.movieActors.map((movieActor, index: number) => {
-            if (!movieActor.actor) return "";
-            const name = movieActor.actor.name;
+          {item.actor.map((actorName: string, index: number) => {
             return (
-              <Fragment key={name}>
+              <Fragment key={actorName}>
                 {index > 0 && <span className="text-slate-200">, </span>}
                 <Link
-                  key={name}
-                  href={`/phim?country=${name.replaceAll(" ", "+")}`}
+                  href={`/phim?model=area&value=${actorName.replaceAll(
+                    " ",
+                    "+"
+                  )}`}
                   className="text-slate-200 hover:text-blue-500 hover:underline hover:underline-offset-2"
                 >
-                  {name}
+                  {actorName}
                 </Link>
               </Fragment>
             );
@@ -132,7 +113,7 @@ export default function Information({
           Thời lượng: <span className="text-slate-200">{item.time}</span>
         </p>
         <p className="mt-2">
-          Số tập: <span className="text-slate-200">{item.episodeTotal}</span>
+          Số tập: <span className="text-slate-200">{item.episode_total}</span>
         </p>
         {hasLinks && hasEpisode && (
           <div className="mt-2 space-x-2">

@@ -1,6 +1,7 @@
 import HomePage from "@/components/shared/home-page";
-import prisma from "@/lib/client";
+
 import { filmTypesList } from "@/lib/constants";
+import axios from "axios";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,22 +9,37 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const latestMovies = await prisma.movie.findMany({
-    take: 10,
-    orderBy: { updatedAt: "desc" },
-  });
+  const { data: latestMoviesData } = await axios.get(
+    "https://phimapi.com/danh-sach/phim-moi-cap-nhat",
+    {
+      params: {
+        page: 1,
+        limit: 12,
+      },
+    }
+  );
   const _filmTypeList = [...filmTypesList];
-
+  let cdnImageDomain = "";
   for (let i = 0; i < _filmTypeList.length; i++) {
     const filmType = _filmTypeList[i];
-    filmType.movies = await prisma.movie.findMany({
-      where: {
-        type: filmType.slug,
-      },
-      take: 12,
-      orderBy: { updatedAt: "desc" },
-    });
+    const { data: response } = await axios.get(
+      `https://phimapi.com/v1/api/danh-sach/${filmType.slug}`,
+      {
+        params: {
+          limit: 12,
+          page: 1,
+        },
+      }
+    );
+    filmType.movies = response.data.items;
+    cdnImageDomain = response.data.APP_DOMAIN_CDN_IMAGE;
   }
 
-  return <HomePage latestMovies={latestMovies} filmTypeList={_filmTypeList} />;
+  return (
+    <HomePage
+      latestMovies={latestMoviesData.items}
+      filmTypeList={_filmTypeList}
+      cdnImageDomain={cdnImageDomain}
+    />
+  );
 }

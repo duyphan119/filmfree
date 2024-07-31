@@ -1,6 +1,6 @@
+import ErrorMessage from "@/components/shared/error-message";
 import SearchResultsPage from "@/components/shared/search-results-page";
-import prisma from "@/lib/client";
-import { MessageSquareWarning } from "lucide-react";
+import axios from "axios";
 import { redirect } from "next/navigation";
 
 type Props = {
@@ -32,26 +32,18 @@ export default async function SearchResults({ searchParams }: Props) {
     let limit = 16;
     let page = 1;
 
-    const where: any = {
-      OR: [
-        {
-          name: {
-            contains: searchParams.keyword,
-            mode: "insensitive",
-          },
-        },
-        {
-          originName: {
-            contains: searchParams.keyword,
-            mode: "insensitive",
-          },
-        },
-      ],
-    };
-
-    const count = await prisma.movie.count({
-      where,
+    const {
+      data: { data },
+    } = await axios.get("https://phimapi.com/v1/api/tim-kiem", {
+      params: {
+        keyword: searchParams.keyword,
+        page,
+        limit,
+      },
     });
+
+    const count: number = data.params.pagination.totalItems;
+
     return (
       <SearchResultsPage
         totalPages={Math.ceil(count / limit)}
@@ -59,14 +51,11 @@ export default async function SearchResults({ searchParams }: Props) {
         page={page}
         count={count}
         keyword={searchParams.keyword}
+        items={data.items}
+        cdnImageDomain={data.APP_DOMAIN_CDN_IMAGE}
       />
     );
   } catch (error) {
-    return (
-      <div className="bg-destructive text-destructive-foreground p-4 flex gap-1">
-        <MessageSquareWarning />
-        <span>Có lỗi xảy ra, vui lòng thử lại sau!</span>
-      </div>
-    );
+    return <ErrorMessage />;
   }
 }

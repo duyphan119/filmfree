@@ -1,6 +1,5 @@
 "use client";
 
-import { Movie } from "@prisma/client";
 import MovieCard from "./movie-card";
 import Pagination from "./pagination";
 
@@ -9,11 +8,13 @@ export default function ListPage({
   currentPage,
   totalPages,
   slug,
+  cdnImageDomain,
 }: {
-  items: Movie[];
+  items: any[];
   currentPage: number;
   totalPages: number;
   slug?: string;
+  cdnImageDomain: string;
 }) {
   return (
     <>
@@ -21,11 +22,16 @@ export default function ListPage({
         {items.map((item) => {
           return (
             <MovieCard
-              key={item.id}
-              item={item}
+              key={item._id}
+              name={item.name}
+              slug={item.slug}
+              episodeCurrent={item.episode_current}
+              language={item.lang}
+              posterUrl={`${cdnImageDomain}/${item.poster_url}`}
+              thumbnailUrl={`${cdnImageDomain}/${item.thumb_url}`}
+              className="col-span-6 sm:col-span-4 lg:col-span-3"
               showCurrentEpisode={true}
               showLanguage={true}
-              className="col-span-6 sm:col-span-4 lg:col-span-3"
             />
           );
         })}

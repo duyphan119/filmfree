@@ -12,8 +12,8 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import useClickOutside from "@/hooks/useClickOutside";
-import { Movie } from "@prisma/client";
 import axios from "axios";
+import FallbackImage from "./fallback-image";
 
 export default function FormSearch() {
   const pathname = usePathname();
@@ -21,8 +21,9 @@ export default function FormSearch() {
   const searchParamsKeyword = searchParams.get("keyword");
 
   const [visible, setVisible] = useState<boolean>(false);
-  const [results, setResults] = useState<Movie[]>([]);
+  const [results, setResults] = useState<any[]>([]);
   const [keyword, setKeyword] = useState<string>("");
+  const [cdnImageDomain, setCdnImageDomain] = useState<string>("");
 
   const divRef = useRef<HTMLDivElement | null>(null);
 
@@ -49,10 +50,14 @@ export default function FormSearch() {
     let timeoutId = setTimeout(async () => {
       if (keyword) {
         const {
-          data: { items },
-        } = await axios.get("/api/movie", { params: { keyword } });
-
-        setResults(items);
+          data: { data },
+        } = await axios.get("https://phimapi.com/v1/api/tim-kiem", {
+          params: {
+            keyword,
+          },
+        });
+        setCdnImageDomain(data.APP_DOMAIN_CDN_IMAGE);
+        setResults(data.items);
       }
     }, 456);
 
@@ -93,18 +98,21 @@ export default function FormSearch() {
                   >
                     {results.map((movie) => (
                       <Link
-                        key={movie.id}
+                        key={movie._id}
                         href={`/phim/${movie.slug}`}
                         className="p-3 hover:bg-slate-200 cursor-pointer grid grid-cols-4 gap-2"
                       >
-                        <AspectRatio ratio={16 / 9} className="col-span-1">
-                          <Image
-                            src={movie.thumbnailUrl || movie.posterUrl}
-                            alt="thumbnail"
-                            fill
-                            sizes="(max-width:1000px) 50vw, 100vw"
-                          />
-                        </AspectRatio>
+                        {cdnImageDomain && (
+                          <AspectRatio ratio={16 / 9} className="col-span-1">
+                            <FallbackImage
+                              src={`${cdnImageDomain}/${movie.thumb_url}`}
+                              fallbackSrc={`${cdnImageDomain}/${movie.poster_url}`}
+                              alt="thumbnail"
+                              fill
+                              sizes="(max-width:1000px) 50vw, 100vw"
+                            />
+                          </AspectRatio>
+                        )}
                         <div className="col-span-3">
                           <div className="">{movie.name}</div>
                         </div>

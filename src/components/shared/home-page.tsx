@@ -4,18 +4,20 @@ import MovieSlider from "@/components/shared/movie-slider";
 import Link from "next/link";
 
 import { filmTypesList as _filmTypeList } from "@/lib/constants";
-import { Movie } from "@prisma/client";
+
 import { Fragment } from "react";
 import MovieCard from "./movie-card";
 
 type HomePageProps = {
-  latestMovies: Movie[];
+  latestMovies: any[];
   filmTypeList: typeof _filmTypeList;
+  cdnImageDomain: string;
 };
 
 export default function HomePage({
   latestMovies,
   filmTypeList,
+  cdnImageDomain,
 }: HomePageProps) {
   return (
     <>
@@ -31,8 +33,13 @@ export default function HomePage({
               {filmType.movies.map((item) => {
                 return (
                   <MovieCard
-                    key={item.id}
-                    item={item}
+                    key={item._id}
+                    name={item.name}
+                    slug={item.slug}
+                    episodeCurrent={item.episode_current}
+                    language={item.lang}
+                    posterUrl={`${cdnImageDomain}/${item.poster_url}`}
+                    thumbnailUrl={`${cdnImageDomain}/${item.thumb_url}`}
                     showCurrentEpisode={true}
                     showLanguage={true}
                     className="col-span-12 sm:col-span-6 lg:col-span-3"

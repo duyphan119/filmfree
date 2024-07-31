@@ -10,7 +10,7 @@ type ButtonDownloadProps = {
 
 const ButtonDownload = ({ url }: ButtonDownloadProps) => {
   const handleClick = () => {
-    axios.post("/api/convert/m3u8-to-mp4", { url });
+    axios.post("http://localhost:3001", { url });
   };
 
   return (
