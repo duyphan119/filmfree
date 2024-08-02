@@ -47,4 +47,8 @@
     --input: 240 3.7% 15.9%;
     --ring: 142.4 71.8% 29.2%;
   }
+
+  .custom-container {
+    @apply max-w-5xl mx-auto lg:px-10 md:px-8 sm:px-6 px-4;
+  }
 }

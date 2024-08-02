@@ -1,8 +1,6 @@
-import ErrorMessage from "@/components/shared/error-message";
 import Information from "@/components/shared/information";
-
-import axios from "axios";
-import { MessageSquareWarning } from "lucide-react";
+import { defaultTitlePage } from "@/lib/constants";
+import { getMovie } from "@/lib/movie";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -16,46 +14,34 @@ export const generateMetadata = async ({
   params,
 }: Props): Promise<Metadata> => {
   try {
-    const response = await fetch(`https://phimapi.com/phim/${params.slug}`);
-    const jsonData = await response.json();
+    const { movie } = await getMovie(params.slug);
 
     return {
-      title: `FILMFREE | ${jsonData.movie.name}`,
-      description: jsonData.movie.content,
+      title: `FILMFREE | ${movie.name}`,
+      description: movie.content,
     };
   } catch (error) {
     return {
-      title: `FILMFREE | Xem phim miễn phí`,
+      title: defaultTitlePage,
     };
   }
 };
 
 export default async function Details({ params }: Props) {
   try {
-    const { data: detailsData } = await axios.get(
-      `https://phimapi.com/phim/${params.slug}`
-    );
-
-    if (!detailsData) return notFound();
+    const { movie, servers } = await getMovie(params.slug);
 
     return (
       <>
-        <Information
-          item={detailsData.movie}
-          hasLinks={true}
-          servers={detailsData.episodes}
-        />
+        <Information item={movie} hasLinks={true} servers={servers} />
         <div className="space-y-4 p-4">
-          <div className="">{detailsData.movie.description}</div>
-          {detailsData.movie.trailer_url && (
+          <div className="">{movie.content}</div>
+          {movie.trailer_url && (
             <div className="">
               <iframe
                 width="560"
                 height="315"
-                src={detailsData.movie.trailer_url.replace(
-                  "/watch?v=",
-                  "/embed/"
-                )}
+                src={movie.trailer_url.replace("/watch?v=", "/embed/")}
                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen={true}
                 className="mx-auto"
@@ -66,6 +52,6 @@ export default async function Details({ params }: Props) {
       </>
     );
   } catch (error) {
-    return <ErrorMessage />;
+    return notFound();
   }
 }

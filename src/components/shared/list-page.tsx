@@ -27,8 +27,16 @@ export default function ListPage({
               slug={item.slug}
               episodeCurrent={item.episode_current}
               language={item.lang}
-              posterUrl={`${cdnImageDomain}/${item.poster_url}`}
-              thumbnailUrl={`${cdnImageDomain}/${item.thumb_url}`}
+              posterUrl={
+                cdnImageDomain
+                  ? `${cdnImageDomain}/${item.poster_url}`
+                  : item.poster_url
+              }
+              thumbnailUrl={
+                cdnImageDomain
+                  ? `${cdnImageDomain}/${item.thumb_url}`
+                  : item.thumb_url
+              }
               className="col-span-6 sm:col-span-4 lg:col-span-3"
               showCurrentEpisode={true}
               showLanguage={true}

@@ -1,19 +1,17 @@
 "use client";
 
 import { Search } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
-
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import useClickOutside from "@/hooks/useClickOutside";
-import axios from "axios";
 import FallbackImage from "./fallback-image";
+import { searchMovies } from "@/lib/movie";
 
 export default function FormSearch() {
   const pathname = usePathname();
@@ -49,15 +47,11 @@ export default function FormSearch() {
   useEffect(() => {
     let timeoutId = setTimeout(async () => {
       if (keyword) {
-        const {
-          data: { data },
-        } = await axios.get("https://phimapi.com/v1/api/tim-kiem", {
-          params: {
-            keyword,
-          },
+        const { movies, cdnImageDomain } = await searchMovies({
+          keyword,
         });
-        setCdnImageDomain(data.APP_DOMAIN_CDN_IMAGE);
-        setResults(data.items);
+        setCdnImageDomain(cdnImageDomain);
+        setResults(movies);
       }
     }, 456);
 

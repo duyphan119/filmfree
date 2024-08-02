@@ -1,15 +1,14 @@
 "use client";
 
 import MovieSlider from "@/components/shared/movie-slider";
-import Link from "next/link";
-
 import { filmTypesList as _filmTypeList } from "@/lib/constants";
-
+import { LastetMovie } from "@/lib/movie";
+import Link from "next/link";
 import { Fragment } from "react";
 import MovieCard from "./movie-card";
 
 type HomePageProps = {
-  latestMovies: any[];
+  latestMovies: LastetMovie[];
   filmTypeList: typeof _filmTypeList;
   cdnImageDomain: string;
 };

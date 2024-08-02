@@ -1,8 +1,7 @@
-import ErrorMessage from "@/components/shared/error-message";
 import Information from "@/components/shared/information";
 import Streaming from "@/components/shared/streaming";
-
-import axios from "axios";
+import { defaultTitlePage } from "@/lib/constants";
+import { getMovie } from "@/lib/movie";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -16,45 +15,35 @@ type Props = {
 export const generateMetadata = async ({
   params,
 }: Props): Promise<Metadata> => {
-  const { data: detailsData } = await axios.get(
-    `https://phimapi.com/phim/${params.slug}`
-  );
+  try {
+    const { movie } = await getMovie(params.slug);
 
-  if (!detailsData) {
     return {
-      title: "Không tìm thấy trang",
+      title: `FILMFREE | Xem phim ${movie.name}`,
+      description: movie.content,
+    };
+  } catch (error) {
+    return {
+      title: defaultTitlePage,
     };
   }
-
-  return {
-    title: `FILMFREE | Xem phim ${detailsData.movie.name}`,
-    description: detailsData.movie.content,
-  };
 };
 
 export default async function Watching({ params }: Props) {
   try {
-    const { data: detailsData } = await axios.get(
-      `https://phimapi.com/phim/${params.slug}`
-    );
-
-    if (!detailsData) return notFound();
+    const { movie, servers } = await getMovie(params.slug);
 
     return (
       <>
-        <Information
-          item={detailsData.movie}
-          hasLinks={true}
-          servers={detailsData.episodes}
-        />
+        <Information item={movie} hasLinks={true} servers={servers} />
         <Streaming
-          servers={detailsData.episodes}
-          movie={detailsData.movie}
+          servers={servers}
+          movie={movie}
           episodeSlug={params.episodeSlug}
         />
       </>
     );
   } catch (error) {
-    return <ErrorMessage />;
+    return notFound();
   }
 }

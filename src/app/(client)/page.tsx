@@ -1,43 +1,30 @@
 import HomePage from "@/components/shared/home-page";
 
-import { filmTypesList } from "@/lib/constants";
-import axios from "axios";
+import { defaultTitlePage, filmTypesList } from "@/lib/constants";
+import { getLatestMovies, getMovies } from "@/lib/movie";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: `FILMFREE | Xem phim miễn phí`,
+  title: defaultTitlePage,
 };
 
 export default async function Home() {
-  const { data: latestMoviesData } = await axios.get(
-    "https://phimapi.com/danh-sach/phim-moi-cap-nhat",
-    {
-      params: {
-        page: 1,
-        limit: 12,
-      },
-    }
-  );
+  const { movies: lastestMovies } = await getLatestMovies();
   const _filmTypeList = [...filmTypesList];
   let cdnImageDomain = "";
   for (let i = 0; i < _filmTypeList.length; i++) {
     const filmType = _filmTypeList[i];
-    const { data: response } = await axios.get(
-      `https://phimapi.com/v1/api/danh-sach/${filmType.slug}`,
-      {
-        params: {
-          limit: 12,
-          page: 1,
-        },
-      }
-    );
-    filmType.movies = response.data.items;
-    cdnImageDomain = response.data.APP_DOMAIN_CDN_IMAGE;
+    const { movies, cdnImageDomain: _cdnImageDomain } = await getMovies({
+      type: "danh-sach",
+      value: filmType.slug,
+    });
+    filmType.movies = movies;
+    cdnImageDomain = _cdnImageDomain;
   }
 
   return (
     <HomePage
-      latestMovies={latestMoviesData.items}
+      latestMovies={lastestMovies}
       filmTypeList={_filmTypeList}
       cdnImageDomain={cdnImageDomain}
     />

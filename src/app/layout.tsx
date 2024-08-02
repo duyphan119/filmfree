@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 
 import ScrollToTop from "@/components/shared/scroll-to-top";
 import "./globals.css";
+import { defaultTitlePage } from "@/lib/constants";
 
 const font = Poppins({
   subsets: ["latin"],
@@ -10,8 +11,8 @@ const font = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "FILMFREE | Xem phim miễn phí",
-  description: "FILMFREE | Xem phim miễn phí",
+  title: defaultTitlePage,
+  description: "Xem phim miễn phí",
 };
 
 export default function RootLayout({

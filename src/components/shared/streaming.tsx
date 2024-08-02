@@ -1,26 +1,31 @@
 "use client";
 
 import { buttonVariants } from "@/components/ui/button";
+import { Movie, Server } from "@/lib/movie";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Streaming({
   servers,
   movie,
   episodeSlug,
 }: {
-  movie: any;
-  servers: any[];
-  episodeSlug: any;
+  movie: Movie;
+  servers: Server[];
+  episodeSlug: string;
 }) {
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+
   const [current, setCurrent] = useState<any>(null);
 
   useEffect(() => {
     (() => {
       let serverName = localStorage.getItem("currentServerName") || "";
       const server =
-        servers.find((item) => item.name === serverName) || servers[0] || null;
+        servers.find((item) => item.server_name === serverName) ||
+        servers[0] ||
+        null;
 
       const data = server?.server_data.find(
         (item: any) => item.slug === episodeSlug
@@ -41,16 +46,17 @@ export default function Streaming({
     <div className="space-y-4 p-4">
       <div className="">
         <iframe
+          ref={iframeRef}
           src={current.currentEpisode.link_embed}
-          className="w-full aspect-video"
+          className="w-full aspect-video border border-slate-800"
           allowFullScreen={true}
         ></iframe>
       </div>
       <div className="">
         {servers.map((server) => {
           return (
-            <div key={server.id}>
-              <div className="">Server {server.name}</div>
+            <div key={server.server_name}>
+              <div className="">Server {server.server_name}</div>
               <div className="grid grid-cols-12 gap-3 mt-2">
                 {server.server_data.map(({ name, slug }: any) => {
                   const isActive = slug === currentSlug;

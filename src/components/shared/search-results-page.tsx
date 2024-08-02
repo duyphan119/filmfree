@@ -1,11 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import axios from "axios";
 import { ListCollapse } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import MovieCard from "./movie-card";
+import { searchMovies } from "@/lib/movie";
 
 type SearchResultPageProps = {
   keyword: string;
@@ -34,17 +34,13 @@ export default function SearchResultsPage({
     const newPage = page + limit;
     setIsLoading(true);
     try {
-      const {
-        data: { data },
-      } = await axios.get("https://phimapi.com/v1/api/tim-kiem", {
-        params: {
-          keyword,
-          page: newPage,
-          limit,
-        },
+      const { movies: newMovies } = await searchMovies({
+        keyword,
+        page: newPage,
+        limit,
       });
 
-      setMovies([...movies, ...data.items]);
+      setMovies([...movies, ...newMovies]);
       setPage(newPage);
     } catch (error) {
     } finally {
@@ -55,17 +51,13 @@ export default function SearchResultsPage({
   const handleClickCollapse = async () => {
     setIsLoading(true);
     try {
-      const {
-        data: { data },
-      } = await axios.get("https://phimapi.com/v1/api/tim-kiem", {
-        params: {
-          keyword,
-          page: defaultPage,
-          limit,
-        },
+      const { movies: newMovies } = await searchMovies({
+        keyword,
+        page: defaultPage,
+        limit,
       });
 
-      setMovies(data.items);
+      setMovies(newMovies);
       setPage(defaultPage);
     } catch (error) {
     } finally {

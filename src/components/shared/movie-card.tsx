@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import FallbackImage from "./fallback-image";
-
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 
