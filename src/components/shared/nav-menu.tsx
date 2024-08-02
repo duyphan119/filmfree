@@ -1,12 +1,11 @@
 "use client";
 
 import useClickOutside from "@/hooks/useClickOutside";
+import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { ScrollArea } from "../ui/scroll-area";
-import { cn } from "@/lib/utils";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 type NavMenuProps = {
   items: ({ name: string; href: string } & any)[];

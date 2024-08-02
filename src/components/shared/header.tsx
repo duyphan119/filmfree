@@ -23,13 +23,15 @@ export default function Header({ categories, countries }: HeaderProps) {
           </Link>
         </div>
         <div className="h-16 md:h-full flex md:justify-start justify-center gap-4 md:order-2 order-3 w-full md:w-auto">
-          <NavMenu title="Loại" items={filmTypesList} type="danh-sach" />
-          {categories && (
-            <NavMenu title="Thể loại" items={categories} type="the-loai" />
-          )}
-          {countries && (
-            <NavMenu title="Quốc gia" items={countries} type="quoc-gia" />
-          )}
+          <Suspense>
+            <NavMenu title="Loại" items={filmTypesList} type="danh-sach" />
+            {categories && (
+              <NavMenu title="Thể loại" items={categories} type="the-loai" />
+            )}
+            {countries && (
+              <NavMenu title="Quốc gia" items={countries} type="quoc-gia" />
+            )}
+          </Suspense>
         </div>
 
         <Suspense>
