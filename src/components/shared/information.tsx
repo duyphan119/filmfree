@@ -2,8 +2,8 @@ import Link from "next/link";
 
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { buttonVariants } from "@/components/ui/button";
-import FallbackImage from "./fallback-image";
 import { Fragment } from "react";
+import FallbackImage from "./fallback-image";
 
 export default function Information({
   item,
@@ -40,10 +40,7 @@ export default function Information({
               <Fragment key={category.name}>
                 {index > 0 && <span className="text-slate-200">, </span>}
                 <Link
-                  href={`/phim?model=class&value=${category.name.replaceAll(
-                    " ",
-                    "+"
-                  )}`}
+                  href={`/danh-sach-phim?type=the-loai&value=${category.slug}`}
                   className="text-slate-200 hover:text-blue-500 hover:underline hover:underline-offset-2"
                 >
                   {category.name}
@@ -59,10 +56,7 @@ export default function Information({
               <Fragment key={country.name}>
                 {index > 0 && <span className="text-slate-200">, </span>}
                 <Link
-                  href={`/phim?model=area&value=${country.name.replaceAll(
-                    " ",
-                    "+"
-                  )}`}
+                  href={`/danh-sach-phim?type=quoc-gia&value=${country.slug}`}
                   className="text-slate-200 hover:text-blue-500 hover:underline hover:underline-offset-2"
                 >
                   {country.name}
@@ -71,44 +65,8 @@ export default function Information({
             );
           })}
         </p>
-        <p className="mt-2">
-          Đạo diễn:{" "}
-          {item.director.map((directorName: string, index: number) => {
-            return (
-              <Fragment key={directorName}>
-                {index > 0 && <span className="text-slate-200">, </span>}
-                <Link
-                  href={`/phim?model=area&value=${directorName.replaceAll(
-                    " ",
-                    "+"
-                  )}`}
-                  className="text-slate-200 hover:text-blue-500 hover:underline hover:underline-offset-2"
-                >
-                  {directorName}
-                </Link>
-              </Fragment>
-            );
-          })}
-        </p>
-        <p className="mt-2">
-          Diễn viên:{" "}
-          {item.actor.map((actorName: string, index: number) => {
-            return (
-              <Fragment key={actorName}>
-                {index > 0 && <span className="text-slate-200">, </span>}
-                <Link
-                  href={`/phim?model=area&value=${actorName.replaceAll(
-                    " ",
-                    "+"
-                  )}`}
-                  className="text-slate-200 hover:text-blue-500 hover:underline hover:underline-offset-2"
-                >
-                  {actorName}
-                </Link>
-              </Fragment>
-            );
-          })}
-        </p>
+        <p className="mt-2">Đạo diễn: {item.director.join(", ")}</p>
+        <p className="mt-2">Diễn viên: {item.actor.join(", ")}</p>
         <p className="mt-2">
           Thời lượng: <span className="text-slate-200">{item.time}</span>
         </p>
@@ -117,15 +75,6 @@ export default function Information({
         </p>
         {hasLinks && hasEpisode && (
           <div className="mt-2 space-x-2">
-            <Link
-              href={`/phim/${item.slug}/tai-ve`}
-              className={buttonVariants({
-                size: "lg",
-                variant: "secondary",
-              })}
-            >
-              Tải về
-            </Link>
             <Link
               href={`/xem-phim/${item.slug}`}
               className={buttonVariants({

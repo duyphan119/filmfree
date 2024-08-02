@@ -1,26 +1,7 @@
 "use client";
 
+import { filmTypesList } from "@/lib/constants";
 import Link from "next/link";
-import { Separator } from "@/components/ui/separator";
-
-const categories = [
-  {
-    name: "Phim bộ",
-    href: "/danh-sach-phim/phim-bo",
-  },
-  {
-    name: "Phim lẻ",
-    href: "/danh-sach-phim/phim-le",
-  },
-  {
-    name: "Hoạt hình",
-    href: "/danh-sach-phim/hoat-hinh",
-  },
-  {
-    name: "TV Shows",
-    href: "/danh-sach-phim/tv-shows",
-  },
-];
 
 export default function Footer() {
   return (
@@ -32,13 +13,13 @@ export default function Footer() {
             <p className="mt-2">© 2024 FILMFREE. All rights reserved.</p>
           </div>
           <div className="flex gap-4">
-            {categories.map((category) => (
+            {filmTypesList.map((item) => (
               <Link
-                key={category.href}
-                href={category.href}
+                key={item.href}
+                href={item.href}
                 className="justify-start hover:underline hover:underline-offset-2"
               >
-                {category.name}
+                {item.name}
               </Link>
             ))}
           </div>

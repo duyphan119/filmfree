@@ -4,7 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Movie, Server } from "@/lib/movie";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Streaming({
   servers,
@@ -15,8 +15,6 @@ export default function Streaming({
   servers: Server[];
   episodeSlug: string;
 }) {
-  const iframeRef = useRef<HTMLIFrameElement | null>(null);
-
   const [current, setCurrent] = useState<any>(null);
 
   useEffect(() => {
@@ -46,7 +44,6 @@ export default function Streaming({
     <div className="space-y-4 p-4">
       <div className="">
         <iframe
-          ref={iframeRef}
           src={current.currentEpisode.link_embed}
           className="w-full aspect-video border border-slate-800"
           allowFullScreen={true}

@@ -17,6 +17,7 @@ export default async function Home() {
     const { movies, cdnImageDomain: _cdnImageDomain } = await getMovies({
       type: "danh-sach",
       value: filmType.slug,
+      limit: 12,
     });
     filmType.movies = movies;
     cdnImageDomain = _cdnImageDomain;
