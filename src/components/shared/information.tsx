@@ -4,15 +4,16 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { buttonVariants } from "@/components/ui/button";
 import { Fragment } from "react";
 import FallbackImage from "./fallback-image";
+import { Movie, Server } from "@/lib/movie";
 
 export default function Information({
   item,
   hasLinks,
   servers,
 }: {
-  item: any;
+  item: Movie;
   hasLinks?: boolean;
-  servers: any[];
+  servers: Server[];
 }) {
   const hasEpisode = servers.length > 0 && servers[0].server_data.length > 0;
 
@@ -35,7 +36,7 @@ export default function Information({
         <h3 className="text-xl text-slate-400">{item.origin_name}</h3>
         <p className="mt-2">
           Thể loại:{" "}
-          {item.category.map((category: any, index: number) => {
+          {item.category.map((category, index) => {
             return (
               <Fragment key={category.name}>
                 {index > 0 && <span className="text-slate-200">, </span>}
@@ -51,7 +52,7 @@ export default function Information({
         </p>
         <p className="mt-2">
           Quốc gia:{" "}
-          {item.country.map((country: any, index: number) => {
+          {item.country.map((country, index) => {
             return (
               <Fragment key={country.name}>
                 {index > 0 && <span className="text-slate-200">, </span>}

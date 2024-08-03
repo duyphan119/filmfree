@@ -2,13 +2,13 @@
 
 import MovieSlider from "@/components/shared/movie-slider";
 import { filmTypesList as _filmTypeList } from "@/lib/constants";
-import { LastetMovie } from "@/lib/movie";
+import { LatestMovie } from "@/lib/movie";
 import Link from "next/link";
 import { Fragment } from "react";
 import MovieCard from "./movie-card";
 
 type HomePageProps = {
-  latestMovies: LastetMovie[];
+  latestMovies: LatestMovie[];
   filmTypeList: typeof _filmTypeList;
   cdnImageDomain: string;
 };

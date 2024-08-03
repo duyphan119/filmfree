@@ -26,7 +26,7 @@ export default function Streaming({
         null;
 
       const data = server?.server_data.find(
-        (item: any) => item.slug === episodeSlug
+        (item) => item.slug === episodeSlug
       );
       const currentEpisode = data || server?.server_data[0] || null;
       setCurrent({
@@ -55,7 +55,7 @@ export default function Streaming({
             <div key={server.server_name}>
               <div className="">Server {server.server_name}</div>
               <div className="grid grid-cols-12 gap-3 mt-2">
-                {server.server_data.map(({ name, slug }: any) => {
+                {server.server_data.map(({ name, slug }) => {
                   const isActive = slug === currentSlug;
                   return (
                     <Link

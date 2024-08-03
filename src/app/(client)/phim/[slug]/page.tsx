@@ -39,12 +39,10 @@ export default async function Details({ params }: Props) {
           {movie.trailer_url && (
             <div className="">
               <iframe
-                width="560"
-                height="315"
                 src={movie.trailer_url.replace("/watch?v=", "/embed/")}
                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen={true}
-                className="mx-auto"
+                className="w-full sm:mx-auto sm:w-3/4 md:w-2/3 aspect-video"
               ></iframe>
             </div>
           )}

@@ -1,5 +1,6 @@
 "use client";
 
+import { Movie } from "@/lib/movie";
 import MovieCard from "./movie-card";
 import Pagination from "./pagination";
 
@@ -7,14 +8,14 @@ export default function ListPage({
   items,
   currentPage,
   totalPages,
-  slug,
   cdnImageDomain,
+  searchParams,
 }: {
-  items: any[];
+  items: Movie[];
   currentPage: number;
   totalPages: number;
-  slug?: string;
   cdnImageDomain: string;
+  searchParams: Record<string, any>;
 }) {
   return (
     <>
@@ -47,9 +48,13 @@ export default function ListPage({
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            generateHref={(page: number) =>
-              `/danh-sach-phim/${slug}?page=${page}`
-            }
+            generateHref={(page: number) => {
+              const qs = new URLSearchParams({
+                ...searchParams,
+                page: "" + page,
+              })?.toString();
+              return `/danh-sach-phim?${qs}`;
+            }}
           />
         </div>
       </div>

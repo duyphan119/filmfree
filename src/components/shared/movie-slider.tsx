@@ -1,18 +1,18 @@
 "use client";
 
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { LatestMovie } from "@/lib/movie";
 import Link from "next/link";
+import { useEffect } from "react";
 import Swiper from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Autoplay, Navigation } from "swiper/modules";
-
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { useEffect } from "react";
 import FallbackImage from "./fallback-image";
 
 type MovieSliderProps = {
-  movies: any[];
+  movies: LatestMovie[];
 };
 
 export default function MovieSlider({ movies }: MovieSliderProps) {
@@ -74,27 +74,4 @@ export default function MovieSlider({ movies }: MovieSliderProps) {
       <div className="swiper-button-next z-10 !hidden group-hover:!block"></div>
     </div>
   );
-  // return (
-  //   <div className="grid grid-cols-10 gap-4 p-4">
-  //     {movies.map((item: any) => {
-  //       return (
-  //         <Link
-  //           href={`/phim/${item.slug}`}
-  //           key={item._id}
-  //           className="col-span-2 relative"
-  //         >
-  //           <AspectRatio ratio={16 / 9}>
-  //             <Image
-  //               src={item.thumb_url}
-  //               alt={item.slug}
-  //               fill
-  //               className="rounded-md"
-  //             />
-  //           </AspectRatio>
-  //           <h5 className="text-white">{item.name}</h5>
-  //         </Link>
-  //       );
-  //     })}
-  //   </div>
-  // );
 }

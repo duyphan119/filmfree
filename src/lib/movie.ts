@@ -2,7 +2,7 @@ import axios from "axios";
 import { Category } from "./category";
 import { Country } from "./country";
 
-export type LastetMovie = {
+export type LatestMovie = {
   _id: string;
   name: string;
   poster_url: string;
@@ -12,8 +12,8 @@ export type LastetMovie = {
   year: number;
 };
 
-export type Movie = LastetMovie & {
-  episode_current: number;
+export type Movie = LatestMovie & {
+  episode_current: string;
   lang: string;
   episode_total: string;
   content: string;
@@ -130,7 +130,7 @@ export const searchMovies = async ({
 };
 
 export const getLatestMovies = async (): Promise<{
-  movies: LastetMovie[];
+  movies: LatestMovie[];
   pagination: Pagination;
 }> => {
   const { data } = await axios.get(

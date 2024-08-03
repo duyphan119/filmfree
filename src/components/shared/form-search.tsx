@@ -11,7 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import useClickOutside from "@/hooks/useClickOutside";
 import FallbackImage from "./fallback-image";
-import { searchMovies } from "@/lib/movie";
+import { Movie, searchMovies } from "@/lib/movie";
 
 export default function FormSearch() {
   const pathname = usePathname();
@@ -19,7 +19,7 @@ export default function FormSearch() {
   const searchParamsKeyword = searchParams.get("keyword");
 
   const [visible, setVisible] = useState<boolean>(false);
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<Movie[]>([]);
   const [keyword, setKeyword] = useState<string>("");
   const [cdnImageDomain, setCdnImageDomain] = useState<string>("");
 

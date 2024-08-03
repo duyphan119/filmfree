@@ -34,13 +34,14 @@ const Movies = async ({ searchParams }: MoviesType) => {
       movies,
       cdnImageDomain,
       pagination: { totalPages, currentPage },
-    } = await getMovies({ type, value, page, limit });
+    } = await getMovies({ type, value, page, limit: limit || 16 });
     return (
       <ListPage
         cdnImageDomain={cdnImageDomain}
         items={movies}
         currentPage={currentPage}
         totalPages={totalPages}
+        searchParams={searchParams}
       />
     );
   } catch (error) {

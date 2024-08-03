@@ -5,7 +5,7 @@ import { ListCollapse } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import MovieCard from "./movie-card";
-import { searchMovies } from "@/lib/movie";
+import { Movie, searchMovies } from "@/lib/movie";
 
 type SearchResultPageProps = {
   keyword: string;
@@ -13,7 +13,7 @@ type SearchResultPageProps = {
   limit: number;
   page: number;
   count: number;
-  items: any[];
+  items: Movie[];
   cdnImageDomain: string;
 };
 

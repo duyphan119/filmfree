@@ -35,19 +35,20 @@ export default async function SearchResults({
     if (!searchParams.keyword) {
       return redirect("/");
     }
-
+    const limit = +searchParams.limit || 56;
     const {
       cdnImageDomain,
       movies,
-      pagination: { currentPage, totalItems, totalPages, totalItemsPerPage },
+      pagination: { currentPage, totalItems },
     } = await searchMovies({
       keyword: searchParams.keyword,
       ...searchParams,
+      limit,
     });
     return (
       <SearchResultsPage
-        totalPages={totalPages}
-        limit={totalItemsPerPage}
+        totalPages={Math.ceil(totalItems / limit)}
+        limit={limit}
         page={currentPage}
         count={totalItems}
         keyword={searchParams.keyword}
