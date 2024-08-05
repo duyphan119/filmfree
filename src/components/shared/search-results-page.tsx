@@ -1,11 +1,11 @@
 "use client";
 
+import { Movie, searchMovies } from "@/lib/movie";
 import { cn } from "@/lib/utils";
 import { ListCollapse } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Button } from "../ui/button";
 import MovieCard from "./movie-card";
-import { Movie, searchMovies } from "@/lib/movie";
 
 type SearchResultPageProps = {
   keyword: string;
@@ -20,50 +20,39 @@ type SearchResultPageProps = {
 export default function SearchResultsPage({
   keyword,
   count,
-  limit,
-  page: defaultPage,
+  limit: defaultLimit,
+  page,
   totalPages,
   items,
   cdnImageDomain,
 }: SearchResultPageProps) {
-  const [movies, setMovies] = useState<any[]>(items);
-  const [page, setPage] = useState<number>(defaultPage);
+  const [movies, setMovies] = useState<Movie[]>(items);
+  const [limit, setLimit] = useState<number>(defaultLimit);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleClickLoadmore = async () => {
-    const newPage = page + limit;
+  const fetchMovies = useCallback(async (newLimit: number) => {
     setIsLoading(true);
     try {
       const { movies: newMovies } = await searchMovies({
         keyword,
-        page: newPage,
-        limit,
-      });
-
-      setMovies([...movies, ...newMovies]);
-      setPage(newPage);
-    } catch (error) {
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleClickCollapse = async () => {
-    setIsLoading(true);
-    try {
-      const { movies: newMovies } = await searchMovies({
-        keyword,
-        page: defaultPage,
-        limit,
+        page,
+        limit: newLimit,
       });
 
       setMovies(newMovies);
-      setPage(defaultPage);
+      setLimit(newLimit);
     } catch (error) {
     } finally {
       setIsLoading(false);
     }
-    setPage(defaultPage);
+  }, []);
+
+  const handleClickLoadmore = async () => {
+    fetchMovies(limit + defaultLimit);
+  };
+
+  const handleClickCollapse = async () => {
+    fetchMovies(defaultLimit);
   };
 
   return (
