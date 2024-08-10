@@ -1,28 +1,53 @@
 "use client";
 
 import MovieSlider from "@/components/shared/movie-slider";
-import { filmTypesList as _filmTypeList } from "@/lib/constants";
-import { LatestMovie } from "@/lib/movie";
+import { filmTypesList } from "@/lib/constants";
+import { LatestMovie, getLatestMovies, getMovies } from "@/lib/movie";
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, useState, useEffect } from "react";
 import MovieCard from "./movie-card";
 
-type HomePageProps = {
+type HomePage = {
   latestMovies: LatestMovie[];
-  filmTypeList: typeof _filmTypeList;
+  filmTypeList: typeof filmTypesList;
   cdnImageDomain: string;
 };
 
-export default function HomePage({
-  latestMovies,
-  filmTypeList,
-  cdnImageDomain,
-}: HomePageProps) {
+export default function HomePage() {
+  const [data, setData] = useState<HomePage | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { movies: latestMovies } = await getLatestMovies();
+        const _filmTypeList = [...filmTypesList];
+        let cdnImageDomain = "";
+        for (let i = 0; i < _filmTypeList.length; i++) {
+          const filmType = _filmTypeList[i];
+          const { movies, cdnImageDomain: _cdnImageDomain } = await getMovies({
+            type: "danh-sach",
+            value: filmType.slug,
+            limit: 12,
+          });
+          filmType.movies = movies;
+          cdnImageDomain = _cdnImageDomain;
+        }
+        setData({
+          cdnImageDomain,
+          filmTypeList: _filmTypeList,
+          latestMovies,
+        });
+      } catch (error) {}
+    })();
+  }, []);
+
+  if (!data) return "Loading...";
+
   return (
     <>
       <Heading href="/danh-sach-phim">Phim mới cập nhật</Heading>
-      <MovieSlider movies={latestMovies} />
-      {filmTypeList.map((filmType) => {
+      <MovieSlider movies={data.latestMovies} />
+      {data.filmTypeList.map((filmType) => {
         return (
           <Fragment key={filmType.href}>
             <Heading href={`/danh-sach-phim/${filmType.slug}`}>
@@ -37,8 +62,8 @@ export default function HomePage({
                     slug={item.slug}
                     episodeCurrent={item.episode_current}
                     language={item.lang}
-                    posterUrl={`${cdnImageDomain}/${item.poster_url}`}
-                    thumbnailUrl={`${cdnImageDomain}/${item.thumb_url}`}
+                    posterUrl={`${data.cdnImageDomain}/${item.poster_url}`}
+                    thumbnailUrl={`${data.cdnImageDomain}/${item.thumb_url}`}
                     showCurrentEpisode={true}
                     showLanguage={true}
                     className="col-span-12 sm:col-span-6 lg:col-span-3"
